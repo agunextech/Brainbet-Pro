@@ -1,0 +1,1900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BrainBet Pro – Premium Betting Tips</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #F0B429;
+  --gold-dark: #C9941A;
+  --green: #00C853;
+  --red: #FF3D57;
+  --bg: #0A0E1A;
+  --bg2: #111827;
+  --bg3: #1C2333;
+  --card: #161D2E;
+  --border: rgba(240,180,41,0.15);
+  --text: #E8EAF0;
+  --muted: #6B7280;
+  --radius: 12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* GLOBAL OVERFLOW FIX */
+html,body{overflow-x:hidden;max-width:100vw;}
+*{box-sizing:border-box;}
+img{max-width:100%;}
+.section{overflow:hidden;}
+.tips-grid{overflow:hidden;}
+.reviews-grid{overflow:hidden;}
+.plans-grid{overflow:hidden;}
+
+/* TABLE OVERFLOW */
+.table-wrap{width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+.results-table{width:100%;min-width:500px;border-collapse:collapse;}
+.results-table th{padding:12px 16px;text-align:left;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.5px;border-bottom:1px solid var(--border);}
+.results-table td{padding:14px 16px;font-size:14px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.results-table tr:hover td{background:rgba(255,255,255,0.02);}
+
+/* SCROLLBAR */
+::-webkit-scrollbar{width:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px;}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(10,14,26,0.95);backdrop-filter:blur(20px);border-bottom:1px solid var(--border);padding:0 20px;}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:64px;}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);letter-spacing:2px;cursor:pointer;}
+.logo span{color:var(--text);}
+.nav-links{display:flex;gap:4px;align-items:center;}
+.nav-link{padding:8px 14px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;color:var(--muted);transition:all .2s;white-space:nowrap;}
+.nav-link:hover,.nav-link.active{color:var(--gold);background:rgba(240,180,41,0.08);}
+.nav-actions{display:flex;gap:8px;align-items:center;}
+.btn{padding:9px 20px;border-radius:8px;border:none;cursor:pointer;font-family:'Outfit',sans-serif;font-size:14px;font-weight:600;transition:all .2s;}
+.btn-outline{background:transparent;border:1px solid var(--gold);color:var(--gold);}
+.btn-outline:hover{background:var(--gold);color:var(--bg);}
+.btn-gold{background:var(--gold);color:var(--bg);}
+.btn-gold:hover{background:var(--gold-dark);transform:translateY(-1px);}
+.btn-green{background:var(--green);color:#fff;}
+.btn-green:hover{opacity:.9;}
+.burger{display:none;}
+
+/* PAGES */
+.page{display:none;min-height:100vh;padding-top:64px;}
+.page.active{display:block;}
+
+/* BOTTOM TAB BAR */
+.bottom-bar{display:none;position:fixed;bottom:0;left:0;right:0;z-index:1000;background:rgba(10,14,26,0.97);backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:6px 0 env(safe-area-inset-bottom,6px);}
+.bottom-bar-inner{display:flex;align-items:stretch;}
+.tab-item{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;padding:8px 4px;cursor:pointer;color:var(--muted);transition:all .2s;border:none;background:transparent;font-family:'Outfit',sans-serif;position:relative;}
+.tab-item:hover,.tab-item.active{color:var(--gold);}
+.tab-item.active::before{content:'';position:absolute;top:0;left:20%;right:20%;height:2px;background:var(--gold);border-radius:0 0 3px 3px;}
+.tab-icon{font-size:20px;line-height:1;}
+.tab-label{font-size:10px;font-weight:700;letter-spacing:.3px;text-transform:uppercase;}
+.tab-item.active .tab-icon{transform:translateY(-1px);}
+.tab-vip .tab-icon{font-size:18px;}
+.tab-vip.active{color:var(--gold);}
+
+/* SECTION TITLES — bolder */
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;font-weight:900;letter-spacing:1px;text-shadow:0 2px 12px rgba(0,0,0,0.4);}
+.section-title span{color:var(--gold);}
+.page-heading{font-family:'Bebas Neue',sans-serif;font-size:40px;color:#fff;font-weight:900;letter-spacing:1.5px;margin-bottom:24px;text-shadow:0 2px 12px rgba(0,0,0,0.4);}
+.page-heading span{color:var(--gold);}
+
+/* HERO */
+.hero{position:relative;min-height:calc(100vh - 64px);display:flex;align-items:center;overflow:hidden;background:linear-gradient(135deg,#0A0E1A 0%,#0D1525 50%,#0A1020 100%);}
+.hero-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 70% 50%,rgba(240,180,41,0.08) 0%,transparent 60%),radial-gradient(ellipse at 20% 80%,rgba(0,200,83,0.05) 0%,transparent 50%);}
+.hero-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(240,180,41,0.03) 1px,transparent 1px),linear-gradient(90deg,rgba(240,180,41,0.03) 1px,transparent 1px);background-size:50px 50px;}
+.hero-content{position:relative;max-width:1200px;margin:0 auto;padding:60px 20px;display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
+.hero-tag{display:inline-flex;align-items:center;gap:8px;background:rgba(240,180,41,0.1);border:1px solid rgba(240,180,41,0.2);border-radius:20px;padding:6px 14px;font-size:12px;font-weight:600;color:var(--gold);letter-spacing:1px;margin-bottom:20px;}
+.hero-tag::before{content:'';width:6px;height:6px;background:var(--green);border-radius:50%;animation:pulse 2s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(1.5);}}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:72px;line-height:1;color:#fff;margin-bottom:20px;}
+.hero h1 span{color:var(--gold);}
+.hero p{font-size:18px;color:var(--muted);line-height:1.7;margin-bottom:30px;}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap;}
+.hero-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px;}
+.hero-stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center;}
+.hero-stat-num{font-family:'Bebas Neue',sans-serif;font-size:36px;color:var(--gold);}
+.hero-stat-label{font-size:12px;color:var(--muted);margin-top:4px;}
+.hero-right{display:flex;flex-direction:column;gap:12px;}
+.tip-preview{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;transition:transform .2s;}
+.tip-preview:hover{transform:translateX(4px);}
+.tip-preview-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+.tip-teams{font-weight:600;font-size:15px;}
+.tip-badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;letter-spacing:.5px;}
+.badge-free{background:rgba(0,200,83,0.15);color:var(--green);}
+.badge-vip{background:rgba(240,180,41,0.15);color:var(--gold);}
+.badge-live{background:rgba(255,61,87,0.15);color:var(--red);animation:pulse 1.5s infinite;}
+.tip-details{display:flex;gap:16px;font-size:13px;color:var(--muted);}
+.tip-pred{color:var(--gold);font-weight:600;}
+.tip-odds{color:var(--text);}
+.won-tag{color:var(--green);font-weight:700;}
+.lost-tag{color:var(--red);font-weight:700;}
+
+/* SECTION */
+.section{max-width:1200px;margin:0 auto;padding:60px 20px;}
+.section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:30px;}
+.section-title{font-family:'Bebas Neue',sans-serif;font-size:36px;color:#fff;}
+.section-title span{color:var(--gold);}
+
+/* TIPS GRID */
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:16px;}
+.tip-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:all .2s;position:relative;overflow:hidden;}
+.tip-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-dark));}
+.tip-card:hover{border-color:rgba(240,180,41,0.3);transform:translateY(-2px);}
+.tip-card-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:14px;}
+.tip-match{font-size:16px;font-weight:700;}
+.tip-competition{font-size:12px;color:var(--muted);margin-top:3px;display:flex;align-items:center;gap:6px;}
+.comp-flag{font-size:14px;}
+.tip-card-body{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px;}
+.tip-info-item label{font-size:11px;color:var(--muted);display:block;margin-bottom:3px;}
+.tip-info-item span{font-size:14px;font-weight:600;}
+.tip-card-footer{display:flex;justify-content:space-between;align-items:center;padding-top:12px;border-top:1px solid var(--border);}
+.status-badge{padding:4px 12px;border-radius:20px;font-size:11px;font-weight:700;}
+.status-ns{background:rgba(107,114,128,0.2);color:var(--muted);}
+.status-live{background:rgba(255,61,87,0.15);color:var(--red);}
+.status-ended{background:rgba(17,24,39,0.8);color:var(--muted);}
+
+/* VIP LOCK - full card overlay (home preview only) */
+.vip-locked{position:relative;}
+.vip-overlay{position:absolute;inset:0;background:rgba(10,14,26,0.85);backdrop-filter:blur(4px);border-radius:var(--radius);display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;}
+.vip-overlay .lock-icon{font-size:32px;margin-bottom:10px;}
+.vip-overlay p{font-size:13px;color:var(--muted);text-align:center;max-width:180px;}
+.vip-overlay .btn{margin-top:12px;font-size:12px;padding:7px 16px;}
+
+/* VIP PARTIAL LOCK - show match, blur tip + odds */
+.blurred-field{filter:blur(6px);user-select:none;pointer-events:none;border-radius:4px;background:rgba(240,180,41,0.06);display:inline-block;}
+.vip-inline-lock{display:flex;align-items:center;gap:8px;background:rgba(240,180,41,0.06);border:1px dashed rgba(240,180,41,0.25);border-radius:8px;padding:8px 12px;margin-top:10px;cursor:pointer;transition:all .2s;}
+.vip-inline-lock:hover{background:rgba(240,180,41,0.12);border-color:rgba(240,180,41,0.5);}
+.vip-inline-lock span{font-size:12px;color:var(--gold);font-weight:600;}
+
+/* RESULTS table blurred VIP cells */
+.result-blur{filter:blur(5px);user-select:none;pointer-events:none;border-radius:3px;}
+.result-lock-cell{cursor:pointer;}
+.result-lock-cell:hover .result-blur{filter:blur(3px);}
+
+/* PLAN CARD improvements */
+.plan-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:30px;text-align:center;position:relative;transition:all .3s;}
+.plan-card.popular{border-color:var(--gold);box-shadow:0 0 30px rgba(240,180,41,0.12);}
+.plan-card.best-value{border-color:var(--green);box-shadow:0 0 30px rgba(0,200,83,0.10);}
+.plan-banner{position:absolute;top:-13px;left:50%;transform:translateX(-50%);font-size:10px;font-weight:800;padding:4px 16px;border-radius:20px;letter-spacing:1px;white-space:nowrap;}
+.banner-popular{background:var(--gold);color:var(--bg);}
+.banner-value{background:var(--green);color:#fff;}
+.plan-save-badge{display:inline-block;background:rgba(0,200,83,0.12);border:1px solid rgba(0,200,83,0.25);color:var(--green);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:10px;}
+.plan-per-day{font-size:12px;color:var(--muted);margin-bottom:6px;}
+
+
+/* SLIDER */
+.slider-section{background:var(--bg2);padding:50px 0;overflow:hidden;}
+.slider-track{display:flex;gap:16px;animation:slide 30s linear infinite;width:max-content;}
+.slider-track:hover{animation-play-state:paused;}
+@keyframes slide{0%{transform:translateX(0);}100%{transform:translateX(-50%);}}
+.slide-item{width:200px;height:140px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;text-align:center;}
+.slide-win{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--green);}
+.slide-match{font-size:11px;color:var(--muted);margin-top:4px;}
+.slide-odds{font-size:20px;font-weight:700;color:var(--gold);margin-top:4px;}
+
+/* SUBSCRIPTION PLANS */
+.plans-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;}
+.plan-card{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:30px;text-align:center;position:relative;transition:all .3s;}
+.plan-card.popular{border-color:var(--gold);transform:scale(1.03);}
+.plan-card.popular::before{content:'MOST POPULAR';position:absolute;top:-12px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--bg);font-size:10px;font-weight:800;padding:4px 14px;border-radius:20px;letter-spacing:1px;}
+.plan-card:hover{border-color:rgba(240,180,41,0.4);}
+.plan-name{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--gold);letter-spacing:1px;}
+.plan-price{font-family:'Bebas Neue',sans-serif;font-size:52px;color:#fff;margin:12px 0 4px;}
+.plan-price span{font-size:20px;color:var(--muted);}
+.plan-duration{font-size:13px;color:var(--muted);margin-bottom:24px;}
+.plan-features{list-style:none;margin-bottom:28px;text-align:left;}
+.plan-features li{padding:8px 0;font-size:14px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+.plan-features li::before{content:'✓';color:var(--green);font-weight:700;}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(8px);z-index:2000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:32px;width:100%;max-width:480px;position:relative;transform:translateY(20px);transition:transform .3s;}
+.modal-overlay.open .modal{transform:translateY(0);}
+.modal-close{position:absolute;top:16px;right:16px;background:var(--bg3);border:none;color:var(--muted);width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;}
+.modal-close:hover{color:#fff;background:var(--red);}
+.modal h2{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--gold);margin-bottom:6px;}
+.modal p{font-size:14px;color:var(--muted);margin-bottom:24px;}
+.form-group{margin-bottom:16px;}
+.form-group label{display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:6px;}
+.form-group input,.form-group select{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;outline:none;transition:border-color .2s;}
+.form-group input:focus,.form-group select:focus{border-color:var(--gold);}
+.form-group input::placeholder{color:var(--muted);}
+.tabs{display:flex;gap:4px;background:var(--bg3);border-radius:10px;padding:4px;margin-bottom:24px;}
+.tab{flex:1;padding:9px;border-radius:7px;border:none;background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;}
+.tab.active{background:var(--gold);color:var(--bg);}
+
+/* PAYMENT */
+.payment-methods{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px;}
+.pay-method{background:var(--bg3);border:2px solid var(--border);border-radius:10px;padding:14px;cursor:pointer;text-align:center;transition:all .2s;}
+.pay-method:hover,.pay-method.selected{border-color:var(--gold);background:rgba(240,180,41,0.05);}
+.pay-method-name{font-size:13px;font-weight:700;margin-top:6px;}
+.pay-method-sub{font-size:11px;color:var(--muted);}
+.mpesa-green{color:#00A651;}
+.flw-yellow{color:#F5A623;}
+
+/* DASHBOARD */
+.dash-grid{display:grid;grid-template-columns:300px 1fr;gap:24px;align-items:start;}
+.dash-sidebar{background:var(--card);border:1px solid var(--border);border-radius:16px;padding:24px;}
+.dash-avatar{width:64px;height:64px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;color:var(--bg);margin:0 auto 12px;}
+.dash-name{text-align:center;font-weight:700;font-size:18px;}
+.dash-email{text-align:center;font-size:13px;color:var(--muted);margin-bottom:20px;}
+.sub-status-card{background:var(--bg3);border-radius:12px;padding:16px;margin-bottom:16px;}
+.sub-active{color:var(--green);font-weight:700;font-size:13px;}
+.sub-inactive{color:var(--red);font-weight:700;font-size:13px;}
+.countdown{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--gold);margin:8px 0;}
+.progress-bar{height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-top:8px;}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--gold));border-radius:3px;transition:width .5s;}
+.dash-nav{list-style:none;margin-top:20px;}
+.dash-nav li{padding:10px 12px;border-radius:8px;cursor:pointer;font-size:14px;font-weight:500;color:var(--muted);transition:all .2s;display:flex;align-items:center;gap:10px;}
+.dash-nav li:hover,.dash-nav li.active{background:rgba(240,180,41,0.08);color:var(--gold);}
+
+/* RESULTS TABLE */
+.results-table{width:100%;border-collapse:collapse;}
+.results-table th{padding:12px 16px;text-align:left;font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.5px;border-bottom:1px solid var(--border);}
+.results-table td{padding:14px 16px;font-size:14px;border-bottom:1px solid rgba(255,255,255,0.04);}
+.results-table tr:hover td{background:rgba(255,255,255,0.02);}
+
+/* REVIEWS */
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;}
+.review-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;}
+.review-header{display:flex;align-items:center;gap:12px;margin-bottom:12px;}
+.review-avatar{width:40px;height:40px;background:linear-gradient(135deg,var(--gold),var(--gold-dark));border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--bg);font-size:16px;}
+.review-name{font-weight:600;font-size:15px;}
+.review-date{font-size:11px;color:var(--muted);}
+.stars{color:var(--gold);font-size:14px;margin-bottom:8px;}
+.review-text{font-size:14px;color:var(--muted);line-height:1.6;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:14px 20px;font-size:14px;z-index:3000;transform:translateY(100px);opacity:0;transition:all .3s;max-width:300px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.success{border-color:var(--green);color:var(--green);}
+.toast.error{border-color:var(--red);color:var(--red);}
+.toast.info{border-color:var(--gold);color:var(--gold);}
+
+/* FILTERS */
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:24px;}
+.filter-btn{padding:8px 16px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;font-size:13px;cursor:pointer;transition:all .2s;}
+.filter-btn:hover,.filter-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(240,180,41,0.08);}
+
+/* FOOTER */
+footer{background:var(--bg2);border-top:1px solid var(--border);padding:40px 20px;margin-top:60px;}
+.footer-inner{max-width:1200px;margin:0 auto;display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:40px;}
+.footer-brand p{font-size:13px;color:var(--muted);line-height:1.7;margin-top:10px;max-width:260px;}
+.footer-col h4{font-size:13px;font-weight:700;color:var(--text);margin-bottom:14px;letter-spacing:.5px;}
+.footer-col a{display:block;font-size:13px;color:var(--muted);margin-bottom:8px;cursor:pointer;transition:color .2s;text-decoration:none;}
+.footer-col a:hover{color:var(--gold);}
+.footer-bottom{max-width:1200px;margin:24px auto 0;padding-top:20px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted);}
+
+/* RESPONSIVE */
+@media(max-width:900px){
+  .hero-content{grid-template-columns:1fr;gap:40px;}
+  .hero h1{font-size:52px;}
+  .hero-right{display:none;}
+  .plans-grid{grid-template-columns:1fr;}
+  .plan-card.popular{transform:none;}
+  .dash-grid{grid-template-columns:1fr;}
+  .footer-inner{grid-template-columns:1fr 1fr;}
+  .nav-links{display:none !important;}
+  .burger{display:none !important;}
+  .bottom-bar{display:block;}
+  .page{padding-bottom:72px;}
+  /* Move toast above bottom bar */
+  .toast{bottom:80px;}
+}
+@media(max-width:600px){
+  .hero h1{font-size:40px;}
+  .hero-stats{grid-template-columns:1fr 1fr;}
+  .tips-grid{grid-template-columns:1fr;}
+  .footer-inner{grid-template-columns:1fr;}
+  .section-title{font-size:30px;}
+  .page-heading{font-size:34px;}
+}
+
+/* EMPTY STATE */
+.empty-state{text-align:center;padding:60px 20px;}
+.empty-state .icon{font-size:48px;margin-bottom:16px;}
+.empty-state h3{font-size:20px;margin-bottom:8px;}
+.empty-state p{color:var(--muted);font-size:14px;}
+
+/* NOTIFICATION BELL */
+.notif-bell{position:relative;cursor:pointer;padding:8px;}
+.notif-bell svg{width:20px;height:20px;fill:var(--muted);transition:fill .2s;}
+.notif-bell:hover svg{fill:var(--gold);}
+.notif-dot{position:absolute;top:6px;right:6px;width:8px;height:8px;background:var(--red);border-radius:50%;border:2px solid var(--bg);}
+
+/* FEATURED GAMES BANNER */
+#featuredBanner{height:110px;}
+#featuredTrack{display:flex;height:110px;transition:transform .45s cubic-bezier(.4,0,.2,1);will-change:transform;}
+.feat-slide{flex-shrink:0;height:110px;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;cursor:pointer;}
+.feat-slide-bg{position:absolute;inset:0;background-size:cover;background-position:center;filter:brightness(.28);}
+.feat-teams{display:flex;align-items:center;gap:10px;position:relative;z-index:1;width:100%;max-width:560px;padding:0 44px;margin:0 auto;}
+/* Each side */
+.feat-team{display:flex;flex-direction:column;align-items:center;gap:2px;flex:1;min-width:0;}
+.feat-team-name{font-size:11px;font-weight:800;color:#fff;text-align:center;line-height:1.2;text-shadow:0 1px 6px rgba(0,0,0,1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:120px;letter-spacing:.3px;}
+/* Player + Logo row */
+.feat-imgs{display:flex;align-items:flex-end;justify-content:center;gap:4px;position:relative;}
+.feat-player{width:52px;height:52px;border-radius:50%;object-fit:cover;object-position:top;border:2px solid rgba(255,255,255,.5);background:var(--bg3);flex-shrink:0;}
+.feat-badge{width:26px;height:26px;border-radius:50%;object-fit:contain;background:rgba(255,255,255,.08);border:1.5px solid var(--gold);flex-shrink:0;margin-left:-10px;margin-bottom:2px;}
+.feat-img-placeholder{width:52px;height:52px;border-radius:50%;background:var(--bg3);border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+/* VS centre */
+.feat-vs{display:flex;flex-direction:column;align-items:center;flex-shrink:0;gap:1px;padding:0 6px;}
+.feat-vs-text{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--gold);line-height:1;}
+.feat-kickoff{font-size:10px;color:rgba(255,255,255,.9);font-weight:700;white-space:nowrap;}
+.feat-competition{font-size:9px;color:rgba(240,180,41,.9);letter-spacing:.3px;white-space:nowrap;max-width:130px;overflow:hidden;text-overflow:ellipsis;text-align:center;}
+.feat-dot{width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,.3);cursor:pointer;transition:all .2s;}
+.feat-dot.active{background:var(--gold);transform:scale(1.3);}
+.feat-arrow{position:absolute;top:50%;transform:translateY(-50%);background:rgba(0,0,0,.45);border:none;color:var(--gold);font-size:18px;width:28px;height:28px;border-radius:50%;cursor:pointer;z-index:10;display:flex;align-items:center;justify-content:center;transition:background .2s;}
+.feat-arrow:hover{background:rgba(240,180,41,.25);}
+@media(max-width:900px){
+  #featuredBanner{height:96px;}
+  #featuredTrack{height:96px;}
+  .feat-slide{height:96px;}
+  .feat-player{width:42px;height:42px;}
+  .feat-badge{width:22px;height:22px;}
+  .feat-img-placeholder{width:42px;height:42px;}
+  .feat-team-name{font-size:10px;max-width:90px;}
+  .feat-vs-text{font-size:22px;}
+}
+
+.alert-banner{background:rgba(240,180,41,0.08);border:1px solid rgba(240,180,41,0.2);border-radius:10px;padding:12px 16px;margin-bottom:20px;font-size:13px;display:flex;align-items:center;gap:10px;}
+.alert-banner.expiry{color:var(--gold);}
+.alert-banner.expired{background:rgba(255,61,87,0.08);border-color:rgba(255,61,87,0.2);color:var(--red);}
+</style>
+<!-- ======================================================
+     FIREBASE SDK — loaded from Google CDN (free, no install)
+     ====================================================== -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+
+// ══════════════════════════════════════════════════════
+// 🔑 YOUR FIREBASE CONFIG — Replace with your own values
+//    Get these from: Firebase Console → Project Settings
+// ══════════════════════════════════════════════════════
+const firebaseConfig = {
+  apiKey:            "REPLACE_WITH_YOUR_API_KEY",
+  authDomain:        "REPLACE_WITH_YOUR_AUTH_DOMAIN",
+  projectId:         "REPLACE_WITH_YOUR_PROJECT_ID",
+  storageBucket:     "REPLACE_WITH_YOUR_STORAGE_BUCKET",
+  messagingSenderId: "REPLACE_WITH_YOUR_MESSAGING_SENDER_ID",
+  appId:             "REPLACE_WITH_YOUR_APP_ID"
+};
+
+// ══════════════════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════════════════
+const app  = initializeApp(firebaseConfig);
+const db   = getFirestore(app);
+const auth = getAuth(app);
+
+// ══════════════════════════════════════════════════════
+// DB HELPER — wraps Firestore, falls back to localStorage
+// ══════════════════════════════════════════════════════
+window.DB = {
+
+  // ── TIPS ──────────────────────────────────────────
+  async getTips() {
+    try {
+      const snap = await getDocs(query(collection(db,'tips'), orderBy('createdAt','desc')));
+      const tips = snap.docs.map(d => ({id: d.id, ...d.data()}));
+      localStorage.setItem('bb_tips', JSON.stringify(tips)); // cache
+      return tips;
+    } catch(e) {
+      console.warn('Firebase offline, using cache:', e.message);
+      return JSON.parse(localStorage.getItem('bb_tips') || '[]');
+    }
+  },
+
+  // Real-time tips listener — updates UI instantly when admin posts
+  listenTips(callback) {
+    try {
+      return onSnapshot(query(collection(db,'tips'), orderBy('createdAt','desc')), snap => {
+        const tips = snap.docs.map(d => ({id: d.id, ...d.data()}));
+        localStorage.setItem('bb_tips', JSON.stringify(tips));
+        callback(tips);
+      });
+    } catch(e) { return () => {}; }
+  },
+
+  // ── REVIEWS ──────────────────────────────────────
+  async getReviews() {
+    try {
+      const snap = await getDocs(query(collection(db,'reviews'), orderBy('createdAt','desc')));
+      const reviews = snap.docs.map(d => ({id: d.id, ...d.data()}));
+      localStorage.setItem('bb_reviews', JSON.stringify(reviews));
+      return reviews;
+    } catch(e) {
+      return JSON.parse(localStorage.getItem('bb_reviews') || '[]');
+    }
+  },
+
+  listenReviews(callback) {
+    try {
+      return onSnapshot(query(collection(db,'reviews'), orderBy('createdAt','desc')), snap => {
+        const reviews = snap.docs.map(d => ({id: d.id, ...d.data()}));
+        localStorage.setItem('bb_reviews', JSON.stringify(reviews));
+        callback(reviews);
+      });
+    } catch(e) { return () => {}; }
+  },
+
+  async addReview(review) {
+    try {
+      const ref = await addDoc(collection(db,'reviews'), {...review, createdAt: serverTimestamp()});
+      return ref.id;
+    } catch(e) {
+      console.warn('Firebase write failed, saved locally only');
+      return null;
+    }
+  },
+
+  // ── FEATURED GAMES ───────────────────────────────
+  listenFeatured(callback) {
+    try {
+      return onSnapshot(collection(db,'featured'), snap => {
+        const games = snap.docs.map(d => ({id: d.id, ...d.data()})).filter(g => g.active !== false);
+        localStorage.setItem('bb_featured', JSON.stringify(games));
+        callback(games);
+      });
+    } catch(e) { return () => {}; }
+  },
+
+  // ── SETTINGS / PLANS ─────────────────────────────
+  async getPlans() {
+    try {
+      const snap = await getDoc(doc(db,'settings','plans'));
+      if(snap.exists()) {
+        localStorage.setItem('bb_plans', JSON.stringify(snap.data().plans));
+        return snap.data().plans;
+      }
+    } catch(e) {}
+    return JSON.parse(localStorage.getItem('bb_plans') || 'null');
+  },
+
+  listenPlans(callback) {
+    try {
+      return onSnapshot(doc(db,'settings','plans'), snap => {
+        if(snap.exists()) {
+          localStorage.setItem('bb_plans', JSON.stringify(snap.data().plans));
+          callback(snap.data().plans);
+        }
+      });
+    } catch(e) { return () => {}; }
+  },
+
+  // ── AUTH ──────────────────────────────────────────
+  async register(email, password, name, phone) {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
+    // Save extra profile data to Firestore
+    await setDoc(doc(db,'users', cred.user.uid), {
+      name, email, phone,
+      createdAt: serverTimestamp(),
+      subscription: null
+    });
+    return cred.user;
+  },
+
+  async login(email, password) {
+    const cred = await signInWithEmailAndPassword(auth, email, password);
+    const snap  = await getDoc(doc(db,'users', cred.user.uid));
+    return snap.exists() ? {uid: cred.user.uid, ...snap.data()} : {uid: cred.user.uid, email};
+  },
+
+  async logout() {
+    await signOut(auth);
+  },
+
+  onAuthChange(callback) {
+    return onAuthStateChanged(auth, async user => {
+      if(user) {
+        const snap = await getDoc(doc(db,'users', user.uid));
+        callback(snap.exists() ? {uid: user.uid, ...snap.data()} : {uid: user.uid, email: user.email});
+      } else {
+        callback(null);
+      }
+    });
+  },
+
+  async saveSubscription(uid, subscription) {
+    try {
+      await updateDoc(doc(db,'users', uid), {subscription});
+    } catch(e) { console.warn('Sub save failed:', e.message); }
+  },
+
+  async getUserProfile(uid) {
+    try {
+      const snap = await getDoc(doc(db,'users', uid));
+      return snap.exists() ? {uid, ...snap.data()} : null;
+    } catch(e) { return null; }
+  },
+};
+
+// ══════════════════════════════════════════════════════
+// BOOT — fires after Firebase loads, sets up real-time listeners
+// ══════════════════════════════════════════════════════
+window.addEventListener('DOMContentLoaded', () => {
+  // Auth state listener — keeps user logged in across page refreshes
+  window.DB.onAuthChange(user => {
+    if(user) {
+      window.currentUser = user;
+      localStorage.setItem('bbUser', JSON.stringify(user));
+    } else {
+      window.currentUser = null;
+      localStorage.removeItem('bbUser');
+    }
+    if(typeof updateAuthUI === 'function') updateAuthUI();
+    if(typeof renderDashboard === 'function' && document.getElementById('page-dashboard')?.classList.contains('active')) renderDashboard();
+  });
+
+  // Real-time tips — UI updates the moment admin publishes a tip
+  window.DB.listenTips(tips => {
+    window.TIPS = tips;
+    if(typeof renderHomeFree === 'function')  renderHomeFree();
+    if(typeof renderHomeVip === 'function')   renderHomeVip();
+    if(typeof renderFreeGrid === 'function')  renderFreeGrid();
+    if(typeof renderVipPage === 'function')   renderVipPage();
+    if(typeof renderResults === 'function')   renderResults();
+  });
+
+  // Real-time reviews — approved ones appear instantly after admin approves
+  window.DB.listenReviews(reviews => {
+    window.REVIEWS = reviews;
+    if(typeof renderHomeReviews === 'function') renderHomeReviews();
+    if(typeof renderReviews === 'function')     renderReviews();
+  });
+
+  // Real-time featured games — banner updates the moment admin adds/removes
+  window.DB.listenFeatured(games => {
+    if(typeof renderFeaturedBanner === 'function') renderFeaturedBanner(games);
+  });
+
+  // Plans pricing — updates across all devices when admin changes prices
+  window.DB.listenPlans(plans => {
+    if(plans && plans.length === 3) {
+      window.PLANS = window.DEFAULT_PLANS.map((d,i) => ({...d, usd: plans[i].usd, saveUsd: plans[i].saveUsd}));
+      if(typeof renderPlans === 'function') renderPlans();
+    }
+  });
+});
+</script>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="logo" onclick="showPage('home')">BRAIN<span>BET</span> PRO</div>
+    <div class="nav-links" id="navLinks">
+      <div class="nav-link active" onclick="showPage('home');setActive(this)">Home</div>
+      <div class="nav-link" onclick="showPage('free');setActive(this)">Free Tips</div>
+      <div class="nav-link" onclick="showPage('vip');setActive(this)">VIP Tips 👑</div>
+      <div class="nav-link" onclick="showPage('results');setActive(this)">Results</div>
+      <div class="nav-link" onclick="showPage('reviews');setActive(this)">Reviews</div>
+    </div>
+    <div class="nav-actions">
+      <div class="notif-bell" onclick="showNotifications()" id="notifBell" style="display:none">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg>
+        <span class="notif-dot" id="notifDot"></span>
+      </div>
+      <div id="authBtns" style="display:flex;gap:8px;align-items:center;">
+        <button class="btn btn-outline" onclick="openModal('login')">Login</button>
+        <button class="btn btn-gold" onclick="openModal('register')">Join Free</button>
+      </div>
+      <div id="userBtn" style="display:none;gap:8px;align-items:center;">
+        <button class="btn btn-outline" onclick="showPage('dashboard')">Dashboard</button>
+        <button class="btn" style="background:var(--bg3);color:var(--muted)" onclick="logout()">Logout</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<!-- BOTTOM TAB BAR (mobile only) -->
+<div class="bottom-bar">
+  <div class="bottom-bar-inner">
+    <button class="tab-item active" id="tab-home" onclick="showPage('home');setTab(this)">
+      <span class="tab-icon">🏠</span>
+      <span class="tab-label">Home</span>
+    </button>
+    <button class="tab-item" id="tab-free" onclick="showPage('free');setTab(this)">
+      <span class="tab-icon">⚽</span>
+      <span class="tab-label">Free</span>
+    </button>
+    <button class="tab-item tab-vip" id="tab-vip" onclick="showPage('vip');setTab(this)">
+      <span class="tab-icon">👑</span>
+      <span class="tab-label">VIP</span>
+    </button>
+    <button class="tab-item" id="tab-results" onclick="showPage('results');setTab(this)">
+      <span class="tab-icon">📋</span>
+      <span class="tab-label">Results</span>
+    </button>
+    <button class="tab-item" id="tab-dashboard" onclick="showPage('dashboard');setTab(this)">
+      <span class="tab-icon">👤</span>
+      <span class="tab-label">Account</span>
+    </button>
+  </div>
+</div>
+
+<!-- FEATURED GAMES BANNER (below nav, above everything) -->
+<div id="featuredBanner" style="display:none;position:fixed;top:64px;left:0;right:0;z-index:900;background:var(--bg2);border-bottom:1px solid var(--border);overflow:hidden;">
+  <div id="featuredTrack"></div>
+  <button class="feat-arrow" onclick="featuredPrev()" style="left:8px;">‹</button>
+  <button class="feat-arrow" onclick="featuredNext()" style="right:8px;">›</button>
+  <div id="featuredDots" style="position:absolute;bottom:5px;left:50%;transform:translateX(-50%);display:flex;gap:5px;z-index:10;"></div>
+</div>
+
+<!-- ===== HOME PAGE ===== -->
+<div class="page active" id="page-home">
+  <!-- Hero -->
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="hero-grid"></div>
+    <div class="hero-content">
+      <div>
+        <div class="hero-tag">🔴 LIVE PREDICTIONS</div>
+        <h1>WIN MORE <span>BETS</span> WITH PRO TIPS</h1>
+        <p>Expert betting predictions across all major leagues worldwide. Free tips daily, premium VIP tips for serious bettors.</p>
+        <div class="hero-btns">
+          <button class="btn btn-gold" onclick="showPage('free')">View Free Tips</button>
+          <button class="btn btn-outline" onclick="openModal('subscribe')">Join VIP 👑</button>
+        </div>
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="hero-stat-num" id="statWinRate">87%</div><div class="hero-stat-label">Win Rate</div></div>
+          <div class="hero-stat"><div class="hero-stat-num" id="statTips">2,400+</div><div class="hero-stat-label">Tips Published</div></div>
+          <div class="hero-stat"><div class="hero-stat-num" id="statMembers">8,900+</div><div class="hero-stat-label">Active Members</div></div>
+        </div>
+      </div>
+      <div class="hero-right" id="heroRight"></div>
+    </div>
+  </div>
+
+  <!-- Wins Slider -->
+  <div class="slider-section">
+    <div class="slider-track" id="sliderTrack"></div>
+  </div>
+
+  <!-- Latest Free Tips Preview -->
+  <div class="section">
+    <div class="section-header">
+      <h2 class="section-title">TODAY'S <span>FREE TIPS</span></h2>
+      <button class="btn btn-outline" onclick="showPage('free')">View All →</button>
+    </div>
+    <div class="tips-grid" id="homeFreeGrid"></div>
+  </div>
+
+  <!-- VIP Teaser -->
+  <div style="background:var(--bg2);padding:60px 0;">
+    <div class="section" style="padding-top:0;padding-bottom:0;">
+      <div class="section-header">
+        <h2 class="section-title">👑 VIP <span>TIPS PREVIEW</span></h2>
+        <button class="btn btn-gold" onclick="openModal('subscribe')">Unlock VIP</button>
+      </div>
+      <div class="tips-grid" id="homeVipGrid"></div>
+    </div>
+  </div>
+
+  <!-- Plans -->
+  <div class="section">
+    <div class="section-header" style="justify-content:center;flex-direction:column;text-align:center;gap:10px">
+      <h2 class="section-title">CHOOSE YOUR <span>VIP PLAN</span></h2>
+      <p style="color:var(--muted);font-size:15px">Unlock all premium predictions and maximize your winnings</p>
+    </div>
+    <div class="plans-grid" id="plansGrid"></div>
+  </div>
+
+  <!-- Reviews Preview -->
+  <div style="background:var(--bg2);padding:60px 0;">
+    <div class="section" style="padding-top:0;padding-bottom:0;">
+      <div class="section-header">
+        <h2 class="section-title">WHAT MEMBERS <span>SAY</span></h2>
+        <button class="btn btn-outline" onclick="showPage('reviews')">All Reviews →</button>
+      </div>
+      <div class="reviews-grid" id="homeReviews"></div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-inner">
+      <div class="footer-brand">
+        <div class="logo">BRAIN<span>BET</span> PRO</div>
+        <p>Premium betting predictions for serious bettors. Expert analysis across all major leagues worldwide.</p>
+      </div>
+      <div class="footer-col">
+        <h4>NAVIGATION</h4>
+        <a onclick="showPage('home')">Home</a>
+        <a onclick="showPage('free')">Free Tips</a>
+        <a onclick="showPage('vip')">VIP Tips</a>
+        <a onclick="showPage('results')">Results</a>
+      </div>
+      <div class="footer-col">
+        <h4>ACCOUNT</h4>
+        <a onclick="openModal('login')">Login</a>
+        <a onclick="openModal('register')">Register</a>
+        <a onclick="openModal('subscribe')">Get VIP</a>
+      </div>
+      <div class="footer-col">
+        <h4>CONTACT</h4>
+        <a><span class="__cf_email__" data-cfemail="afdcdadfdfc0dddbefcdddcec6c1cdcadbdfddc081ccc0c2">[email&#160;protected]</span></a>
+        <a>+254 700 000000</a>
+        <a>Nairobi, Kenya</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 BrainBet Pro. All rights reserved.</span>
+      <span style="color:var(--red);font-size:11px">⚠️ Gamble responsibly. 18+ only.</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ===== FREE TIPS PAGE ===== -->
+<div class="page" id="page-free">
+  <div class="section">
+    <div class="section-header">
+      <h2 class="page-heading">FREE <span>TIPS</span></h2>
+    </div>
+    <div class="filters" id="freeFilters">
+      <button class="filter-btn active" onclick="filterTips('free','all',this)">All</button>
+      <button class="filter-btn" onclick="filterTips('free','not_started',this)">Upcoming</button>
+      <button class="filter-btn" onclick="filterTips('free','live',this)">🔴 Live</button>
+      <button class="filter-btn" onclick="filterTips('free','ended',this)">Ended</button>
+    </div>
+    <div class="tips-grid" id="freeGrid"></div>
+  </div>
+</div>
+
+<!-- ===== VIP PAGE ===== -->
+<div class="page" id="page-vip">
+  <div class="section">
+    <div class="section-header">
+      <h2 class="page-heading">👑 VIP <span>TIPS</span></h2>
+    </div>
+    <div id="vipContent"></div>
+  </div>
+</div>
+
+<!-- ===== RESULTS PAGE ===== -->
+<div class="page" id="page-results">
+  <div class="section">
+    <div class="section-header">
+      <h2 class="page-heading">PREVIOUS <span>RESULTS</span></h2>
+    </div>
+    <div class="filters">
+      <button class="filter-btn active" onclick="filterResults('all',this)">All</button>
+      <button class="filter-btn" onclick="filterResults('free',this)">Free</button>
+      <button class="filter-btn" onclick="filterResults('vip',this)">VIP</button>
+      <button class="filter-btn" onclick="filterResults('won',this)">✅ Won</button>
+      <button class="filter-btn" onclick="filterResults('lost',this)">❌ Lost</button>
+    </div>
+    <div class="table-wrap" style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);">
+      <table class="results-table" id="resultsTable">
+        <thead>
+          <tr>
+            <th>Match</th>
+            <th>Competition</th>
+            <th>Prediction</th>
+            <th>Odds</th>
+            <th>Type</th>
+            <th>Result</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="resultsBody"></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ===== DASHBOARD ===== -->
+<div class="page" id="page-dashboard">
+  <div class="section">
+    <h2 class="page-heading" style="margin-bottom:24px">MY <span>DASHBOARD</span></h2>
+    <div class="dash-grid" id="dashGrid"></div>
+  </div>
+</div>
+
+<!-- ===== REVIEWS PAGE ===== -->
+<div class="page" id="page-reviews">
+  <div class="section">
+    <div class="section-header">
+      <h2 class="page-heading">MEMBER <span>REVIEWS</span></h2>
+      <button class="btn btn-outline" onclick="openModal('review')" id="writeReviewBtn" style="display:none">Write Review</button>
+    </div>
+    <div class="reviews-grid" id="reviewsGrid"></div>
+  </div>
+</div>
+
+<!-- ===== MODALS ===== -->
+<!-- Auth Modal -->
+<div class="modal-overlay" id="modal-auth">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('auth')">✕</button>
+    <h2 id="authTitle">WELCOME BACK</h2>
+    <p id="authSub">Login to access your account</p>
+    <div class="tabs">
+      <button class="tab active" onclick="switchAuthTab('login',this)">Login</button>
+      <button class="tab" onclick="switchAuthTab('register',this)">Register</button>
+    </div>
+    <div id="loginForm">
+      <div class="form-group"><label>Email or Phone</label><input type="text" id="loginEmail" placeholder="Enter email or phone"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="loginPass" placeholder="Enter password"></div>
+      <button class="btn btn-gold" style="width:100%" onclick="doLogin()">Login</button>
+      <p style="text-align:center;margin-top:12px;font-size:13px;color:var(--muted)">Demo: use any email + password "demo123"</p>
+    </div>
+    <div id="registerForm" style="display:none">
+      <div class="form-group"><label>Full Name</label><input type="text" id="regName" placeholder="Your full name"></div>
+      <div class="form-group"><label>Email</label><input type="email" id="regEmail" placeholder="your@email.com"></div>
+      <div class="form-group"><label>Phone (M-Pesa)</label><input type="tel" id="regPhone" placeholder="+254 7XX XXX XXX"></div>
+      <div class="form-group"><label>Password</label><input type="password" id="regPass" placeholder="Create password"></div>
+      <button class="btn btn-gold" style="width:100%" onclick="doRegister()">Create Account</button>
+    </div>
+  </div>
+</div>
+
+<!-- Subscribe Modal -->
+<div class="modal-overlay" id="modal-subscribe">
+  <div class="modal" style="max-width:520px">
+    <button class="modal-close" onclick="closeModal('subscribe')">✕</button>
+    <h2>UNLOCK VIP 👑</h2>
+    <p>Choose your plan — prices shown in USD, converted at checkout</p>
+
+    <!-- Plan selector -->
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:20px" id="planSelector"></div>
+
+    <!-- Country selector -->
+    <div class="form-group" style="margin-bottom:16px">
+      <label>Your Country</label>
+      <select id="countrySelect" onchange="onCountryChange(this.value)" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px 14px;color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;outline:none;">
+      </select>
+    </div>
+
+    <!-- Payment methods (dynamic based on country) -->
+    <div id="payMethodsWrap" style="margin-bottom:16px"></div>
+
+    <!-- Payment fields (dynamic) -->
+    <div id="payFieldsWrap"></div>
+
+    <!-- Order summary -->
+    <div style="background:var(--bg3);border-radius:10px;padding:14px;margin-bottom:16px;font-size:14px;">
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+        <span style="color:var(--muted)">Plan</span>
+        <span id="summPlan" style="font-weight:700">Weekly · 7 days</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+        <span style="color:var(--muted)">USD Price</span>
+        <span id="summUsd" style="color:var(--muted)">$8.00</span>
+      </div>
+      <div style="display:flex;justify-content:space-between;padding-top:8px;border-top:1px solid var(--border)">
+        <span style="color:var(--muted)">You Pay</span>
+        <span id="summAmount" style="color:var(--gold);font-weight:800;font-size:16px">$8.00</span>
+      </div>
+      <div id="summSave" style="display:none;text-align:right;font-size:11px;color:var(--green);margin-top:4px"></div>
+    </div>
+    <button class="btn btn-gold" style="width:100%" onclick="processPayment()">Pay Now 🔐</button>
+  </div>
+</div>
+
+<!-- Review Modal -->
+<div class="modal-overlay" id="modal-review">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('review')">✕</button>
+    <h2>WRITE A REVIEW</h2>
+    <p>Share your experience with BrainBet Pro</p>
+    <div class="form-group"><label>Rating</label>
+      <div style="display:flex;gap:8px;font-size:28px;cursor:pointer" id="starRating">
+        <span onclick="setRating(1)">⭐</span><span onclick="setRating(2)">⭐</span><span onclick="setRating(3)">⭐</span><span onclick="setRating(4)">⭐</span><span onclick="setRating(5)">⭐</span>
+      </div>
+    </div>
+    <div class="form-group"><label>Your Review</label><textarea id="reviewText" style="width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:12px;color:var(--text);font-family:'Outfit',sans-serif;resize:vertical;min-height:100px;outline:none" placeholder="Tell others about your experience..."></textarea></div>
+    <button class="btn btn-gold" style="width:100%" onclick="submitReview()">Submit Review</button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+// ========== DATA ==========
+// USD base prices — admin can edit these via admin panel (stored in localStorage)
+const DEFAULT_PLANS = [
+  {id:'weekly',  name:'Weekly',   days:7,  usd:8,  saveUsd:2,  badge:null,     features:['All VIP Tips Unlocked','Premium Match Analysis','Early Access to Tips']},
+  {id:'monthly', name:'Monthly',  days:30, usd:30, saveUsd:10, badge:'popular', features:['All VIP Tips Unlocked','Premium Match Analysis','Early Access to Tips','Priority Support','Cancel Anytime']},
+  {id:'quarterly',name:'3 Months',days:90, usd:100,saveUsd:20, badge:'value',   features:['All VIP Tips Unlocked','Premium Match Analysis','Early Access to Tips','Priority Support','7 Bonus Days FREE','Lowest Daily Rate']}
+];
+// Load admin-saved prices or use defaults
+let PLANS = (() => {
+  try {
+    const saved = JSON.parse(localStorage.getItem('bb_plans'));
+    if(saved && saved.length === 3) {
+      return DEFAULT_PLANS.map((d,i) => ({...d, usd: saved[i].usd, saveUsd: saved[i].saveUsd}));
+    }
+  } catch(e){}
+  return DEFAULT_PLANS;
+})();
+
+// Countries with currency code, symbol, and approx rate to USD
+const COUNTRIES = [
+  {name:'Kenya',        code:'KE', currency:'KES', symbol:'KES', rate:130,  flag:'🇰🇪', methods:['mpesa','card']},
+  {name:'Nigeria',      code:'NG', currency:'NGN', symbol:'₦',   rate:1600, flag:'🇳🇬', methods:['card','bank']},
+  {name:'South Africa', code:'ZA', currency:'ZAR', symbol:'R',   rate:18,   flag:'🇿🇦', methods:['card']},
+  {name:'Ghana',        code:'GH', currency:'GHS', symbol:'₵',   rate:15,   flag:'🇬🇭', methods:['card','mobile']},
+  {name:'Tanzania',     code:'TZ', currency:'TZS', symbol:'TSh', rate:2500, flag:'🇹🇿', methods:['mpesa','card']},
+  {name:'Uganda',       code:'UG', currency:'UGX', symbol:'USh', rate:3700, flag:'🇺🇬', methods:['mobile','card']},
+  {name:'Ethiopia',     code:'ET', currency:'ETB', symbol:'Br',  rate:57,   flag:'🇪🇹', methods:['card']},
+  {name:'Egypt',        code:'EG', currency:'EGP', symbol:'E£',  rate:31,   flag:'🇪🇬', methods:['card']},
+  {name:'Senegal',      code:'SN', currency:'XOF', symbol:'CFA', rate:615,  flag:'🇸🇳', methods:['card','mobile']},
+  {name:'Cameroon',     code:'CM', currency:'XAF', symbol:'CFA', rate:615,  flag:'🇨🇲', methods:['card','mobile']},
+  {name:'United Kingdom',code:'GB',currency:'GBP', symbol:'£',   rate:0.79, flag:'🇬🇧', methods:['card']},
+  {name:'United States',code:'US', currency:'USD', symbol:'$',   rate:1,    flag:'🇺🇸', methods:['card']},
+  {name:'Germany',      code:'DE', currency:'EUR', symbol:'€',   rate:0.92, flag:'🇩🇪', methods:['card']},
+  {name:'France',       code:'FR', currency:'EUR', symbol:'€',   rate:0.92, flag:'🇫🇷', methods:['card']},
+  {name:'Brazil',       code:'BR', currency:'BRL', symbol:'R$',  rate:5.1,  flag:'🇧🇷', methods:['card']},
+  {name:'India',        code:'IN', currency:'INR', symbol:'₹',   rate:83,   flag:'🇮🇳', methods:['card','upi']},
+  {name:'Saudi Arabia', code:'SA', currency:'SAR', symbol:'﷼',   rate:3.75, flag:'🇸🇦', methods:['card']},
+  {name:'UAE',          code:'AE', currency:'AED', symbol:'د.إ', rate:3.67, flag:'🇦🇪', methods:['card']},
+  {name:'Australia',    code:'AU', currency:'AUD', symbol:'A$',  rate:1.53, flag:'🇦🇺', methods:['card']},
+  {name:'Canada',       code:'CA', currency:'CAD', symbol:'C$',  rate:1.36, flag:'🇨🇦', methods:['card']},
+  {name:'Other',        code:'XX', currency:'USD', symbol:'$',   rate:1,    flag:'🌐',   methods:['card']},
+];
+
+let selectedCountry = COUNTRIES[0]; // Default Kenya
+let selectedPlan = PLANS[0];
+
+// Sample tips data
+let TIPS = (() => {
+  try {
+    const saved = JSON.parse(localStorage.getItem('bb_tips'));
+    if(saved && saved.length) return saved;
+  } catch(e){}
+  return [
+  {id:1,type:'free',match:'Arsenal vs Chelsea',homeTeam:'Arsenal',awayTeam:'Chelsea',competition:'English Premier League',country:'England',continent:'Europe',prediction:'Arsenal Win',odds:'1.85',status:'not_started',result:'pending',matchTime:'2026-03-22T15:00:00',createdAt:'2026-03-20'},
+  {id:2,type:'free',match:'Real Madrid vs Barcelona',homeTeam:'Real Madrid',awayTeam:'Barcelona',competition:'La Liga',country:'Spain',continent:'Europe',prediction:'Both Teams to Score',odds:'1.72',status:'ended',result:'won',matchTime:'2026-03-19T20:00:00',createdAt:'2026-03-18'},
+  {id:3,type:'free',match:'Man City vs Liverpool',homeTeam:'Man City',awayTeam:'Liverpool',competition:'English Premier League',country:'England',continent:'Europe',prediction:'Over 2.5 Goals',odds:'1.65',status:'live',result:'pending',matchTime:'2026-03-20T12:30:00',createdAt:'2026-03-20'},
+  {id:4,type:'free',match:'Gor Mahia vs AFC Leopards',homeTeam:'Gor Mahia',awayTeam:'AFC Leopards',competition:'FKF Premier League',country:'Kenya',continent:'Africa',prediction:'Gor Mahia Win',odds:'2.10',status:'not_started',result:'pending',matchTime:'2026-03-21T15:00:00',createdAt:'2026-03-20'},
+  {id:5,type:'free',match:'TP Mazembe vs Zamalek',homeTeam:'TP Mazembe',awayTeam:'Zamalek SC',competition:'CAF Champions League',country:'International',continent:'Africa',prediction:'Mazembe Win or Draw',odds:'1.55',status:'ended',result:'won',matchTime:'2026-03-18T17:00:00',createdAt:'2026-03-17'},
+  {id:6,type:'vip',match:'Bayern Munich vs Borussia Dortmund',homeTeam:'Bayern Munich',awayTeam:'Borussia Dortmund',competition:'Bundesliga',country:'Germany',continent:'Europe',prediction:'Bayern -1.5',odds:'2.05',status:'not_started',result:'pending',matchTime:'2026-03-22T17:30:00',createdAt:'2026-03-20'},
+  {id:7,type:'vip',match:'PSG vs Marseille',homeTeam:'PSG',awayTeam:'Marseille',competition:'Ligue 1',country:'France',continent:'Europe',prediction:'PSG Win & Over 2.5',odds:'2.40',status:'not_started',result:'pending',matchTime:'2026-03-22T20:45:00',createdAt:'2026-03-20'},
+  {id:8,type:'vip',match:'Inter Milan vs Juventus',homeTeam:'Inter Milan',awayTeam:'Juventus',competition:'Serie A',country:'Italy',continent:'Europe',prediction:'Under 3.5 Goals',odds:'1.60',status:'ended',result:'won',matchTime:'2026-03-19T18:00:00',createdAt:'2026-03-18'},
+  {id:9,type:'vip',match:'Flamengo vs Palmeiras',homeTeam:'Flamengo',awayTeam:'Palmeiras',competition:'Copa Libertadores',country:'International',continent:'South America',prediction:'Both Teams to Score',odds:'1.75',status:'live',result:'pending',matchTime:'2026-03-20T22:00:00',createdAt:'2026-03-20'},
+  {id:10,type:'free',match:'Mamelodi Sundowns vs Orlando Pirates',homeTeam:'Mamelodi Sundowns',awayTeam:'Orlando Pirates',competition:'DStv Premiership',country:'South Africa',continent:'Africa',prediction:'Sundowns Win',odds:'1.90',status:'ended',result:'lost',matchTime:'2026-03-18T15:00:00',createdAt:'2026-03-17'},
+  ];
+})();
+
+let REVIEWS = (() => {
+  try {
+    const saved = JSON.parse(localStorage.getItem('bb_reviews'));
+    if(saved && saved.length) return saved;
+  } catch(e){}
+  return [
+    {id:1,name:'John Kamau',initials:'JK',rating:5,text:'BrainBet Pro changed my betting game completely. The VIP tips are incredibly accurate. Made back my subscription fee in one day!',date:'2026-03-18',status:'approved'},
+    {id:2,name:'Sarah Okonkwo',initials:'SO',rating:5,text:'Best betting tips platform I have ever used. The predictions are well researched and the support is excellent.',date:'2026-03-15',status:'approved'},
+    {id:3,name:'David Mwangi',initials:'DM',rating:4,text:'Very good service. Free tips alone are worth it. VIP takes it to another level. Highly recommended.',date:'2026-03-10',status:'approved'},
+    {id:4,name:'Amara Diallo',initials:'AD',rating:5,text:'I was skeptical at first but the win rate speaks for itself. Already renewed my monthly plan twice!',date:'2026-03-05',status:'approved'},
+    {id:5,name:'Carlos Silva',initials:'CS',rating:4,text:'Great platform, good tips coverage across different leagues. Flutterwave payment worked perfectly from Brazil.',date:'2024-12-28',status:'approved'},
+    {id:6,name:'Fatima Hassan',initials:'FH',rating:5,text:'The VIP tips are premium quality. Every tip comes with a proper analysis. Worth every shilling.',date:'2024-12-25',status:'approved'},
+  ];
+})();
+
+// Win slides data
+const WIN_SLIDES = [
+  {match:'Arsenal vs Wolves',pred:'Arsenal Win',odds:'1.85',result:'WON ✅'},
+  {match:'Real Madrid vs Sevilla',pred:'Over 2.5',odds:'1.70',result:'WON ✅'},
+  {match:'Man United vs Everton',pred:'Both Score',odds:'1.95',result:'WON ✅'},
+  {match:'Gor Mahia vs Sofapaka',pred:'GOR Win',odds:'2.00',result:'WON ✅'},
+  {match:'Bayern vs Hoffenheim',pred:'Bayern -2',odds:'2.10',result:'WON ✅'},
+  {match:'PSG vs Monaco',pred:'PSG Win',odds:'1.55',result:'WON ✅'},
+  {match:'Juventus vs AC Milan',pred:'Under 3.5',odds:'1.65',result:'WON ✅'},
+  {match:'Zamalek vs Al Ahly',pred:'Draw',odds:'3.20',result:'WON ✅'},
+];
+
+// ========== STATE ==========
+let currentUser = JSON.parse(localStorage.getItem('bbUser')) || null;
+let selectedPayMethod = 'mpesa';
+let selectedRating = 5;
+let currentResultFilter = 'all';
+
+// ========== INIT ==========
+document.addEventListener('DOMContentLoaded', () => {
+  renderFeaturedBanner();
+  renderSlider();
+  renderHomeFree();
+  renderHomeVip();
+  renderPlans();
+  renderHomeReviews();
+  renderHeroTips();
+  updateAuthUI();
+  renderFreeGrid();
+  renderVipPage();
+  renderResults();
+  renderReviews();
+  renderPlanSelector();
+});
+
+// ========== FEATURED GAMES BANNER ==========
+let featuredIndex = 0;
+let featuredTimer = null;
+
+// Demo games — pre-seeded so banner shows on first visit
+const DEMO_FEATURED = [
+  {
+    homeTeam:'Manchester United', awayTeam:'Manchester City',
+    homeLogo:'https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg',
+    awayLogo:'https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg',
+    homePlayer:'https://img.a.transfermarkt.technology/portrait/header/240306-1668600215.jpg',
+    awayPlayer:'https://img.a.transfermarkt.technology/portrait/header/418560-1695292560.jpg',
+    competition:'English Premier League — Manchester Derby', kickoff:'20 Mar 2026, 17:30',
+    bgImage:'', active:true
+  },
+  {
+    homeTeam:'Real Madrid', awayTeam:'Barcelona',
+    homeLogo:'https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg',
+    awayLogo:'https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg',
+    homePlayer:'https://img.a.transfermarkt.technology/portrait/header/177683-1682683695.jpg',
+    awayPlayer:'https://img.a.transfermarkt.technology/portrait/header/507792-1689925049.jpg',
+    competition:'La Liga — El Clásico', kickoff:'22 Mar 2026, 20:00',
+    bgImage:'', active:true
+  },
+  {
+    homeTeam:'Gor Mahia', awayTeam:'AFC Leopards',
+    homeLogo:'https://upload.wikimedia.org/wikipedia/en/d/d5/Gor_Mahia_FC_logo.svg',
+    awayLogo:'https://upload.wikimedia.org/wikipedia/en/2/22/AFC_Leopards_crest.svg',
+    homePlayer:'', awayPlayer:'',
+    competition:'FKF Premier League — Mashemeji Derby', kickoff:'21 Mar 2026, 15:00',
+    bgImage:'', active:true
+  },
+  {
+    homeTeam:'Bayern Munich', awayTeam:'Borussia Dortmund',
+    homeLogo:'https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282002%E2%80%932017%29.svg',
+    awayLogo:'https://upload.wikimedia.org/wikipedia/commons/6/67/Borussia_Dortmund_logo.svg',
+    homePlayer:'https://img.a.transfermarkt.technology/portrait/header/114749-1695050453.jpg',
+    awayPlayer:'https://img.a.transfermarkt.technology/portrait/header/276250-1693403388.jpg',
+    competition:'Bundesliga — Der Klassiker', kickoff:'22 Mar 2026, 18:30',
+    bgImage:'', active:true
+  },
+];
+
+function getFeaturedGames() {
+  try {
+    const saved = JSON.parse(localStorage.getItem('bb_featured'));
+    if(saved && saved.length) return saved.filter(g => g.active !== false);
+  } catch(e){}
+  // No admin data yet — show demo games
+  return DEMO_FEATURED.filter(g => g.active !== false);
+}
+
+function renderFeaturedBanner() {
+  const games = getFeaturedGames();
+  const banner = document.getElementById('featuredBanner');
+  const track  = document.getElementById('featuredTrack');
+  const dots   = document.getElementById('featuredDots');
+
+  if(!games.length) { banner.style.display='none'; adjustPagePadding(false); return; }
+
+  banner.style.display = 'block';
+  adjustPagePadding(true);
+
+  track.style.width = (games.length * 100) + '%';
+  track.innerHTML = games.map(g => {
+    const homeImgs = `
+      <div class="feat-imgs">
+        ${g.homePlayer
+          ? `<img class="feat-player" src="${g.homePlayer}" alt="" onerror="this.style.display='none'">`
+          : `<div class="feat-img-placeholder">⚽</div>`}
+        ${g.homeLogo
+          ? `<img class="feat-badge" src="${g.homeLogo}" alt="" onerror="this.style.display='none'">`
+          : ''}
+      </div>`;
+    const awayImgs = `
+      <div class="feat-imgs">
+        ${g.awayLogo
+          ? `<img class="feat-badge" src="${g.awayLogo}" alt="" onerror="this.style.display='none'">`
+          : ''}
+        ${g.awayPlayer
+          ? `<img class="feat-player" src="${g.awayPlayer}" alt="" onerror="this.style.display='none'">`
+          : `<div class="feat-img-placeholder">⚽</div>`}
+      </div>`;
+    return `
+      <div class="feat-slide" style="width:${100/games.length}%">
+        <div class="feat-slide-bg" style="${g.bgImage ? `background-image:url('${g.bgImage}')` : 'background:linear-gradient(135deg,#0d1525 0%,#162040 100%)'}"></div>
+        <div class="feat-teams">
+          <div class="feat-team">
+            ${homeImgs}
+            <div class="feat-team-name">${g.homeTeam}</div>
+          </div>
+          <div class="feat-vs">
+            <div class="feat-vs-text">VS</div>
+            <div class="feat-kickoff">⏰ ${g.kickoff||'TBD'}</div>
+            <div class="feat-competition">${g.competition||''}</div>
+          </div>
+          <div class="feat-team">
+            ${awayImgs}
+            <div class="feat-team-name">${g.awayTeam}</div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+
+  dots.innerHTML = games.map((_,i) =>
+    `<div class="feat-dot ${i===0?'active':''}" onclick="goToFeatured(${i})"></div>`
+  ).join('');
+
+  featuredIndex = 0;
+  track.style.transform = 'translateX(0)';
+  clearInterval(featuredTimer);
+  if(games.length > 1) featuredTimer = setInterval(featuredNext, 4500);
+}
+function adjustPagePadding(hasFeatured) {
+  const bannerH = window.innerWidth <= 900 ? 80 : 90;
+  document.querySelectorAll('.page').forEach(p => {
+    p.style.paddingTop = hasFeatured ? (64 + bannerH) + 'px' : '64px';
+  });
+}
+function featuredNext() {
+  const games = getFeaturedGames();
+  if(!games.length) return;
+  featuredIndex = (featuredIndex + 1) % games.length;
+  goToFeatured(featuredIndex);
+}
+function featuredPrev() {
+  const games = getFeaturedGames();
+  if(!games.length) return;
+  featuredIndex = (featuredIndex - 1 + games.length) % games.length;
+  goToFeatured(featuredIndex);
+}
+function goToFeatured(i) {
+  const games = getFeaturedGames();
+  featuredIndex = i;
+  // Each slide is (100/n)% of track width, so offset = i*(100/n)% of track = i*(100/n)/1 * trackWidth
+  // Since track width = n * 100vw and slide = 100vw: offset = i * (100/n)% of track
+  const slideWidthPct = 100 / games.length;
+  document.getElementById('featuredTrack').style.transform = `translateX(-${i * slideWidthPct}%)`;
+  document.querySelectorAll('.feat-dot').forEach((d,idx) => d.classList.toggle('active', idx===i));
+}
+
+// ========== PAGE NAV ==========
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  window.scrollTo(0,0);
+  // Sync bottom tab bar
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  const tab = document.getElementById('tab-'+id);
+  if(tab) tab.classList.add('active');
+  if(id === 'vip') renderVipPage();
+  if(id === 'dashboard') renderDashboard();
+  if(id === 'results') renderResults();
+  if(id === 'reviews') renderReviews();
+  if(id === 'free') renderFreeGrid();
+}
+function setTab(el) {
+  document.querySelectorAll('.tab-item').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+}
+
+// ========== AUTH ==========
+function updateAuthUI() {
+  if(currentUser) {
+    document.getElementById('authBtns').style.display = 'none';
+    document.getElementById('userBtn').style.display = 'flex';
+    document.getElementById('notifBell').style.display = 'block';
+    document.getElementById('writeReviewBtn').style.display = 'block';
+    checkNotifications();
+  } else {
+    document.getElementById('authBtns').style.display = 'flex';
+    document.getElementById('userBtn').style.display = 'none';
+    document.getElementById('notifBell').style.display = 'none';
+    document.getElementById('writeReviewBtn').style.display = 'none';
+  }
+}
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPass').value;
+  if(!email || !pass) return showToast('Please fill all fields','error');
+  showToast('Logging in...','info');
+  try {
+    // Try Firebase auth first
+    if(window.DB) {
+      const user = await window.DB.login(email, pass);
+      currentUser = user;
+      localStorage.setItem('bbUser', JSON.stringify(currentUser));
+      closeModal('auth');
+      updateAuthUI();
+      showToast('Welcome back, ' + (user.name||email.split('@')[0]) + '! 👋','success');
+    } else {
+      throw new Error('Firebase not ready');
+    }
+  } catch(e) {
+    // Friendly error messages
+    if(e.code === 'auth/user-not-found' || e.code === 'auth/wrong-password' || e.code === 'auth/invalid-credential') {
+      showToast('Wrong email or password','error');
+    } else if(e.code === 'auth/too-many-requests') {
+      showToast('Too many attempts. Try again later','error');
+    } else {
+      // Offline fallback — demo mode
+      if(pass === 'demo123' || pass.length >= 4) {
+        currentUser = {name: email.split('@')[0], email, subscription: JSON.parse(localStorage.getItem('bbSub_'+email)||'null')};
+        localStorage.setItem('bbUser', JSON.stringify(currentUser));
+        closeModal('auth');
+        updateAuthUI();
+        showToast('Welcome back! (offline mode) 👋','success');
+      } else {
+        showToast('Login failed. Check your details','error');
+      }
+    }
+  }
+}
+
+async function doRegister() {
+  const name  = document.getElementById('regName').value.trim();
+  const email = document.getElementById('regEmail').value.trim();
+  const phone = document.getElementById('regPhone').value.trim();
+  const pass  = document.getElementById('regPass').value;
+  if(!name||!email||!pass) return showToast('Please fill all required fields','error');
+  if(pass.length < 6) return showToast('Password must be at least 6 characters','error');
+  showToast('Creating account...','info');
+  try {
+    if(window.DB) {
+      const user = await window.DB.register(email, pass, name, phone);
+      currentUser = {uid: user.uid, name, email, phone, subscription: null};
+      localStorage.setItem('bbUser', JSON.stringify(currentUser));
+      closeModal('auth');
+      updateAuthUI();
+      showToast('Account created! Welcome to BrainBet Pro 🎉','success');
+    } else {
+      throw new Error('Firebase not ready');
+    }
+  } catch(e) {
+    if(e.code === 'auth/email-already-in-use') {
+      showToast('Email already registered. Please login','error');
+    } else if(e.code === 'auth/invalid-email') {
+      showToast('Please enter a valid email address','error');
+    } else if(e.code === 'auth/weak-password') {
+      showToast('Password is too weak — use at least 6 characters','error');
+    } else {
+      // Offline fallback
+      currentUser = {name, email, phone, subscription: null};
+      localStorage.setItem('bbUser', JSON.stringify(currentUser));
+      closeModal('auth');
+      updateAuthUI();
+      showToast('Account created! (offline mode) 🎉','success');
+    }
+  }
+}
+
+async function logout() {
+  try {
+    if(window.DB) await window.DB.logout();
+  } catch(e) {}
+  currentUser = null;
+  localStorage.removeItem('bbUser');
+  updateAuthUI();
+  showPage('home');
+  showToast('Logged out successfully','info');
+}
+
+// ========== MODAL ==========
+function openModal(type) {
+  if(type === 'login' || type === 'register') {
+    document.getElementById('modal-auth').classList.add('open');
+    if(type === 'register') switchAuthTab('register', document.querySelectorAll('.tab')[1]);
+    else switchAuthTab('login', document.querySelectorAll('.tab')[0]);
+  } else if(type === 'subscribe') {
+    if(!currentUser) { openModal('login'); return; }
+    document.getElementById('modal-subscribe').classList.add('open');
+  } else if(type === 'review') {
+    if(!currentUser) { openModal('login'); return; }
+    document.getElementById('modal-review').classList.add('open');
+  }
+}
+function closeModal(type) {
+  if(type === 'auth') document.getElementById('modal-auth').classList.remove('open');
+  else if(type === 'subscribe') document.getElementById('modal-subscribe').classList.remove('open');
+  else if(type === 'review') document.getElementById('modal-review').classList.remove('open');
+}
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if(e.target === m) m.classList.remove('open'); });
+});
+function switchAuthTab(tab, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  if(el) el.classList.add('active');
+  document.getElementById('loginForm').style.display = tab === 'login' ? 'block' : 'none';
+  document.getElementById('registerForm').style.display = tab === 'register' ? 'block' : 'none';
+  document.getElementById('authTitle').textContent = tab === 'login' ? 'WELCOME BACK' : 'JOIN US';
+  document.getElementById('authSub').textContent = tab === 'login' ? 'Login to access your account' : 'Create your free account';
+}
+
+// ========== CURRENCY HELPERS ==========
+function convertPrice(usd, country) {
+  const raw = usd * country.rate;
+  // Round nicely
+  if(raw >= 1000) return Math.round(raw / 10) * 10;
+  if(raw >= 100)  return Math.round(raw / 5) * 5;
+  if(raw >= 10)   return Math.round(raw);
+  return parseFloat(raw.toFixed(2));
+}
+function formatMoney(amount, country) {
+  const formatted = amount >= 1000 ? amount.toLocaleString() : amount;
+  return `${country.symbol}${formatted}`;
+}
+
+// ========== PAYMENT ==========
+function initCountrySelect() {
+  const sel = document.getElementById('countrySelect');
+  if(!sel) return;
+  sel.innerHTML = COUNTRIES.map(c =>
+    `<option value="${c.code}">${c.flag} ${c.name} (${c.currency})</option>`
+  ).join('');
+  sel.value = selectedCountry.code;
+}
+
+function onCountryChange(code) {
+  selectedCountry = COUNTRIES.find(c => c.code === code) || COUNTRIES[0];
+  renderPayMethods();
+  updatePaySummary();
+}
+
+function renderPayMethods() {
+  const wrap = document.getElementById('payMethodsWrap');
+  const methods = selectedCountry.methods;
+  const defs = {
+    mpesa:  {icon:'📱', label:'M-PESA',      sub:'Mobile Money',  color:'#00A651'},
+    card:   {icon:'💳', label:'Card',         sub:'Visa / Mastercard', color:'var(--gold)'},
+    bank:   {icon:'🏦', label:'Bank Transfer',sub:'Direct Transfer',color:'var(--muted)'},
+    mobile: {icon:'📲', label:'Mobile Money', sub:'Airtel / MTN',  color:'#FF6B00'},
+    upi:    {icon:'₹',  label:'UPI',          sub:'India Only',    color:'#4C9EEB'},
+  };
+  wrap.innerHTML = `
+    <label style="font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;display:block;margin-bottom:8px">Payment Method</label>
+    <div class="payment-methods" style="grid-template-columns:repeat(${Math.min(methods.length,3)},1fr)">
+      ${methods.map((m,i) => {
+        const d = defs[m] || defs.card;
+        return `<div class="pay-method ${i===0?'selected':''}" onclick="selectPay(this,'${m}')" data-method="${m}">
+          <div style="font-size:24px">${d.icon}</div>
+          <div class="pay-method-name" style="color:${d.color}">${d.label}</div>
+          <div class="pay-method-sub">${d.sub}</div>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+  selectedPayMethod = methods[0];
+  renderPayFields();
+}
+
+function renderPayFields() {
+  const wrap = document.getElementById('payFieldsWrap');
+  const m = selectedPayMethod;
+  if(m === 'mpesa') {
+    wrap.innerHTML = `<div class="form-group"><label>M-Pesa Phone Number</label><input type="tel" id="payPhone" placeholder="+254 7XX XXX XXX"></div>`;
+  } else if(m === 'upi') {
+    wrap.innerHTML = `<div class="form-group"><label>UPI ID</label><input type="text" id="payUpi" placeholder="yourname@upi"></div>`;
+  } else if(m === 'bank') {
+    wrap.innerHTML = `<div class="form-group"><label>Account Number</label><input type="text" id="payBank" placeholder="Enter account number"></div>`;
+  } else if(m === 'mobile') {
+    wrap.innerHTML = `<div class="form-group"><label>Mobile Money Number</label><input type="tel" id="payMobile" placeholder="+XXX XXXXXXXXX"></div>`;
+  } else {
+    wrap.innerHTML = `<div class="form-group"><label>Email for Receipt</label><input type="email" id="payEmail" placeholder="your@email.com"></div>`;
+  }
+}
+
+function selectPay(el, method) {
+  document.querySelectorAll('.pay-method').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedPayMethod = method;
+  renderPayFields();
+}
+
+function renderPlanSelector() {
+  const el = document.getElementById('planSelector');
+  if(!el) return;
+  el.innerHTML = PLANS.map((p,i) => {
+    const isSelected = i === 0;
+    return `
+      <div style="background:var(--bg3);border:2px solid ${isSelected?'var(--gold)':'var(--border)'};border-radius:10px;padding:10px 8px;cursor:pointer;text-align:center;transition:all .2s;position:relative"
+           onclick="selectPlan(this,'${p.id}')" data-plan="${p.id}">
+        ${p.badge==='popular'?`<div style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--gold);color:var(--bg);font-size:9px;font-weight:800;padding:2px 8px;border-radius:10px;white-space:nowrap">POPULAR</div>`:''}
+        ${p.badge==='value'?`<div style="position:absolute;top:-9px;left:50%;transform:translateX(-50%);background:var(--green);color:#fff;font-size:9px;font-weight:800;padding:2px 8px;border-radius:10px;white-space:nowrap">BEST VALUE</div>`:''}
+        <div style="font-size:11px;color:var(--muted);margin-top:${p.badge?'6':'2'}px">${p.name}</div>
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold)">$${p.usd}</div>
+        <div style="font-size:10px;color:var(--muted)">${p.days} days</div>
+        ${p.saveUsd?`<div style="font-size:9px;color:var(--green);font-weight:700;margin-top:2px">Save $${p.saveUsd}</div>`:''}
+      </div>
+    `;
+  }).join('');
+  initCountrySelect();
+  renderPayMethods();
+  updatePaySummary();
+}
+
+function selectPlan(el, planId) {
+  document.querySelectorAll('[data-plan]').forEach(e => e.style.borderColor = 'var(--border)');
+  el.style.borderColor = 'var(--gold)';
+  selectedPlan = PLANS.find(p => p.id === planId);
+  updatePaySummary();
+}
+
+function updatePaySummary() {
+  if(!selectedPlan || !selectedCountry) return;
+  const localAmt = convertPrice(selectedPlan.usd, selectedCountry);
+  const localSave = selectedPlan.saveUsd ? convertPrice(selectedPlan.saveUsd, selectedCountry) : 0;
+  document.getElementById('summPlan').textContent = `${selectedPlan.name} · ${selectedPlan.days} days`;
+  document.getElementById('summUsd').textContent = `$${selectedPlan.usd}.00`;
+  document.getElementById('summAmount').textContent = formatMoney(localAmt, selectedCountry);
+  const saveEl = document.getElementById('summSave');
+  if(selectedPlan.saveUsd) {
+    saveEl.style.display = 'block';
+    saveEl.textContent = `🎉 You save ${formatMoney(localSave, selectedCountry)} (vs weekly rate)`;
+  } else {
+    saveEl.style.display = 'none';
+  }
+}
+
+async function processPayment() {
+  const phoneEl  = document.getElementById('payPhone');
+  const emailEl  = document.getElementById('payEmail');
+  const mobileEl = document.getElementById('payMobile');
+  if(selectedPayMethod==='mpesa'  && phoneEl  && !phoneEl.value)  return showToast('Enter your M-Pesa number','error');
+  if(selectedPayMethod==='card'   && emailEl  && !emailEl.value)  return showToast('Enter your email','error');
+  if(selectedPayMethod==='mobile' && mobileEl && !mobileEl.value) return showToast('Enter your mobile number','error');
+
+  const localAmt = convertPrice(selectedPlan.usd, selectedCountry);
+  showToast(`Processing ${formatMoney(localAmt, selectedCountry)} via ${selectedPayMethod}... 🔄`,'info');
+
+  setTimeout(async () => {
+    const now = new Date();
+    const end = new Date(now.getTime() + selectedPlan.days * 24 * 60 * 60 * 1000);
+    const subscription = {
+      plan: selectedPlan.id, planName: selectedPlan.name,
+      start: now.toISOString(), end: end.toISOString(),
+      status: 'active', usdAmount: selectedPlan.usd,
+      localAmount: localAmt, currency: selectedCountry.currency,
+      symbol: selectedCountry.symbol, country: selectedCountry.name,
+      method: selectedPayMethod, paidAt: now.toISOString()
+    };
+    currentUser.subscription = subscription;
+    // Save to Firebase if available, always save to localStorage as backup
+    if(window.DB && currentUser.uid) {
+      await window.DB.saveSubscription(currentUser.uid, subscription);
+    }
+    localStorage.setItem('bbUser', JSON.stringify(currentUser));
+    localStorage.setItem('bbSub_'+currentUser.email, JSON.stringify(subscription));
+    closeModal('subscribe');
+    showToast('🎉 VIP Activated! Welcome to the premium tier!','success');
+    renderVipPage();
+    renderDashboard();
+  }, 2500);
+}
+
+// ========== RENDERS ==========
+function renderSlider() {
+  const track = document.getElementById('sliderTrack');
+  const all = [...WIN_SLIDES, ...WIN_SLIDES];
+  track.innerHTML = all.map(s => `
+    <div class="slide-item">
+      <div class="slide-win">${s.result}</div>
+      <div class="slide-match">${s.match}</div>
+      <div style="font-size:12px;color:var(--muted)">${s.pred}</div>
+      <div class="slide-odds">@ ${s.odds}</div>
+    </div>
+  `).join('');
+}
+
+function renderHeroTips() {
+  const el = document.getElementById('heroRight');
+  const tips = TIPS.filter(t => t.type === 'free').slice(0,3);
+  el.innerHTML = tips.map(t => `
+    <div class="tip-preview">
+      <div class="tip-preview-header">
+        <div class="tip-teams">${t.match}</div>
+        <span class="tip-badge badge-${t.status === 'live' ? 'live' : 'free'}">${t.status === 'live' ? '🔴 LIVE' : 'FREE'}</span>
+      </div>
+      <div class="tip-details">
+        <span class="tip-pred">${t.prediction}</span>
+        <span class="tip-odds">@ ${t.odds}</span>
+        <span>${t.result === 'won' ? '<span class="won-tag">✅ WON</span>' : t.result === 'lost' ? '<span class="lost-tag">❌ LOST</span>' : '⏳ Pending'}</span>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderTipCard(tip, locked=false) {
+  const statusClass = {not_started:'status-ns',live:'status-live',ended:'status-ended'}[tip.status];
+  const statusLabel = {not_started:'Not Started',live:'🔴 Live',ended:'Ended'}[tip.status];
+  const resultHtml = tip.result === 'won' ? '<span class="won-tag">✅ WON</span>' : tip.result === 'lost' ? '<span class="lost-tag">❌ LOST</span>' : '<span style="color:var(--muted)">⏳ Pending</span>';
+
+  // FULL lock = home VIP teaser (blurred whole card)
+  if(locked === 'full') {
+    return `
+      <div class="tip-card vip-locked">
+        <div class="vip-overlay"><div class="lock-icon">🔒</div><p>Subscribe to unlock VIP tips</p><button class="btn btn-gold" onclick="openModal('subscribe')">Unlock VIP</button></div>
+        <div class="tip-card-header">
+          <div>
+            <div class="tip-match">${tip.match}</div>
+            <div class="tip-competition"><span class="comp-flag">${getContFlag(tip.continent)}</span>${tip.competition}</div>
+          </div>
+          <span class="tip-badge badge-vip">VIP 👑</span>
+        </div>
+        <div class="tip-card-body">
+          <div class="tip-info-item"><label>PREDICTION</label><span class="blurred-field">Arsenal Win</span></div>
+          <div class="tip-info-item"><label>ODDS</label><span class="blurred-field">2.05</span></div>
+          <div class="tip-info-item"><label>RESULT</label><span>${resultHtml}</span></div>
+        </div>
+        <div class="tip-card-footer">
+          <span class="status-badge ${statusClass}">${statusLabel}</span>
+          <span style="font-size:12px;color:var(--muted)">${formatTime(tip.matchTime)}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  // PARTIAL lock = VIP page for non-subscribers (show match + time, blur tip + odds)
+  if(locked === 'partial') {
+    return `
+      <div class="tip-card" style="border-color:rgba(240,180,41,0.2)">
+        <div class="tip-card-header">
+          <div>
+            <div class="tip-match">${tip.match}</div>
+            <div class="tip-competition"><span class="comp-flag">${getContFlag(tip.continent)}</span>${tip.competition}</div>
+          </div>
+          <span class="tip-badge badge-vip">VIP 👑</span>
+        </div>
+        <div class="tip-card-body">
+          <div class="tip-info-item"><label>PREDICTION</label><span class="blurred-field" title="Subscribe to unlock">•••••••••</span></div>
+          <div class="tip-info-item"><label>ODDS</label><span class="blurred-field" title="Subscribe to unlock">•••</span></div>
+          <div class="tip-info-item"><label>RESULT</label><span>${resultHtml}</span></div>
+        </div>
+        <div class="vip-inline-lock" onclick="openModal('subscribe')">
+          <span>🔒</span><span>Subscribe to see prediction &amp; odds →</span>
+        </div>
+        <div class="tip-card-footer" style="margin-top:10px">
+          <span class="status-badge ${statusClass}">${statusLabel}</span>
+          <span style="font-size:12px;color:var(--muted)">${formatTime(tip.matchTime)}</span>
+        </div>
+      </div>
+    `;
+  }
+
+  // UNLOCKED normal card
+  return `
+    <div class="tip-card">
+      <div class="tip-card-header">
+        <div>
+          <div class="tip-match">${tip.match}</div>
+          <div class="tip-competition"><span class="comp-flag">${getContFlag(tip.continent)}</span>${tip.competition}</div>
+        </div>
+        <span class="tip-badge badge-${tip.type}">${tip.type.toUpperCase()}</span>
+      </div>
+      <div class="tip-card-body">
+        <div class="tip-info-item"><label>PREDICTION</label><span style="color:var(--gold)">${tip.prediction}</span></div>
+        <div class="tip-info-item"><label>ODDS</label><span>${tip.odds}</span></div>
+        <div class="tip-info-item"><label>RESULT</label><span>${resultHtml}</span></div>
+      </div>
+      <div class="tip-card-footer">
+        <span class="status-badge ${statusClass}">${statusLabel}</span>
+        <span style="font-size:12px;color:var(--muted)">${formatTime(tip.matchTime)}</span>
+      </div>
+    </div>
+  `;
+}
+
+function renderHomeFree() {
+  const el = document.getElementById('homeFreeGrid');
+  const tips = TIPS.filter(t => t.type === 'free').slice(0,3);
+  el.innerHTML = tips.length ? tips.map(t => renderTipCard(t)).join('') : emptyState('No free tips today');
+}
+function renderHomeVip() {
+  const el = document.getElementById('homeVipGrid');
+  const tips = TIPS.filter(t => t.type === 'vip').slice(0,3);
+  el.innerHTML = tips.map(t => renderTipCard(t, 'full')).join('');
+}
+function renderPlans() {
+  const el = document.getElementById('plansGrid');
+  const weeklyPerDay = (PLANS[0].usd / PLANS[0].days).toFixed(2);
+  el.innerHTML = PLANS.map(p => {
+    const isPopular = p.badge === 'popular';
+    const isValue   = p.badge === 'value';
+    const perDay    = (p.usd / p.days).toFixed(2);
+    const fullPrice = p.usd + p.saveUsd;
+    const bannerHtml = isPopular
+      ? `<div class="plan-banner banner-popular">⭐ MOST POPULAR</div>`
+      : isValue
+      ? `<div class="plan-banner banner-value">🏆 BEST VALUE</div>`
+      : '';
+    const saveHtml = p.saveUsd
+      ? `<div class="plan-save-badge">🎉 Save $${p.saveUsd} <span style="font-size:10px;opacity:.7">(was $${fullPrice})</span></div>`
+      : `<div style="height:26px"></div>`;
+    return `
+      <div class="${isPopular?'plan-card popular':isValue?'plan-card best-value':'plan-card'}">
+        ${bannerHtml}
+        ${saveHtml}
+        <div class="plan-name" style="color:${isValue?'var(--green)':isPopular?'var(--gold)':'var(--text)'}">${p.name}</div>
+        <div class="plan-price">$${p.usd}<span> USD</span></div>
+        <div class="plan-per-day">$${perDay}/day · ${p.days} days access</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:20px">Price shown in your currency at checkout</div>
+        <ul class="plan-features">
+          ${p.features.map(f=>`<li>${f}</li>`).join('')}
+        </ul>
+        <button class="btn ${isPopular||isValue?'btn-gold':'btn-outline'}" style="width:100%;margin-top:4px" onclick="selectSubPlan('${p.id}')">
+          ${isPopular ? '🔥 Get Monthly Plan' : isValue ? '💎 Get 3-Month Deal' : 'Start Weekly'}
+        </button>
+        ${p.saveUsd ? `<p style="font-size:11px;color:var(--green);margin-top:10px;text-align:center">$${(weeklyPerDay*p.days - p.usd).toFixed(0)} cheaper than paying weekly</p>` : '<p style="height:21px"></p>'}
+      </div>
+    `;
+  }).join('');
+}
+function selectSubPlan(planId) {
+  selectedPlan = PLANS.find(p => p.id === planId);
+  renderPlanSelector();
+  openModal('subscribe');
+}
+function renderHomeReviews() {
+  const el = document.getElementById('homeReviews');
+  const fresh = JSON.parse(localStorage.getItem('bb_reviews') || 'null') || REVIEWS;
+  el.innerHTML = fresh.filter(r => r.status === 'approved').slice(0,3).map(r => renderReviewCard(r)).join('') 
+    || '<p style="color:var(--muted);font-size:14px;padding:20px">No reviews yet.</p>';
+}
+function renderFreeGrid(filter='all') {
+  const el = document.getElementById('freeGrid');
+  let tips = TIPS.filter(t => t.type === 'free');
+  if(filter !== 'all') tips = tips.filter(t => t.status === filter);
+  el.innerHTML = tips.length ? tips.map(t => renderTipCard(t)).join('') : emptyState('No tips found');
+}
+function filterTips(type, filter, el) {
+  document.querySelectorAll('#freeFilters .filter-btn').forEach(b => b.classList.remove('active'));
+  if(el) el.classList.add('active');
+  renderFreeGrid(filter);
+}
+function renderVipPage() {
+  const el = document.getElementById('vipContent');
+  const isActive = currentUser && currentUser.subscription && new Date(currentUser.subscription.end) > new Date();
+  const tips = TIPS.filter(t => t.type === 'vip');
+
+  if(!isActive) {
+    // Show tips but with partial lock (match visible, tip+odds blurred)
+    const lockedCards = tips.length ? tips.map(t => renderTipCard(t, 'partial')).join('') : emptyState('No VIP tips today');
+    el.innerHTML = `
+      <div style="background:linear-gradient(135deg,rgba(240,180,41,0.06),rgba(240,180,41,0.02));border:1px solid rgba(240,180,41,0.2);border-radius:16px;padding:20px 24px;margin-bottom:28px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:16px;">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="font-size:36px">👑</div>
+          <div>
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold)">UNLOCK FULL VIP ACCESS</div>
+            <div style="font-size:13px;color:var(--muted);margin-top:2px">You can see the matches — subscribe to reveal predictions &amp; odds</div>
+          </div>
+        </div>
+        <div style="display:flex;gap:10px;flex-wrap:wrap">
+          <button class="btn btn-gold" onclick="openModal('subscribe')">Subscribe Now</button>
+          ${!currentUser ? `<button class="btn btn-outline" onclick="openModal('login')">Login</button>` : ''}
+        </div>
+      </div>
+      <div class="tips-grid">${lockedCards}</div>
+    `;
+    return;
+  }
+
+  const sub = currentUser.subscription;
+  const daysLeft = Math.ceil((new Date(sub.end) - new Date()) / (1000*60*60*24));
+  let alertHtml = '';
+  if(daysLeft <= 5) alertHtml = `<div class="alert-banner expiry">⚠️ Your VIP subscription expires in ${daysLeft} day(s). <a style="color:var(--gold);cursor:pointer;text-decoration:underline" onclick="openModal('subscribe')">Renew now</a></div>`;
+
+  el.innerHTML = `
+    ${alertHtml}
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px">
+      <div><span class="sub-active">✅ VIP ACTIVE</span><div style="font-size:13px;color:var(--muted);margin-top:4px">Plan: ${sub.planName} · ${daysLeft} days remaining</div></div>
+      <button class="btn btn-gold" onclick="openModal('subscribe')">Renew</button>
+    </div>
+    <div class="tips-grid">${tips.length ? tips.map(t => renderTipCard(t)).join('') : emptyState('No VIP tips today')}</div>
+  `;
+}
+function renderResults(filter='all') {
+  const tbody = document.getElementById('resultsBody');
+  const isVip = currentUser && currentUser.subscription && new Date(currentUser.subscription.end) > new Date();
+  let tips = TIPS.filter(t => t.status === 'ended');
+  if(filter === 'free') tips = tips.filter(t => t.type === 'free');
+  else if(filter === 'vip') tips = tips.filter(t => t.type === 'vip');
+  else if(filter === 'won') tips = tips.filter(t => t.result === 'won');
+  else if(filter === 'lost') tips = tips.filter(t => t.result === 'lost');
+
+  tbody.innerHTML = tips.map(t => {
+    const isVipTip = t.type === 'vip';
+    const shouldBlur = isVipTip && !isVip;
+    const predCell = shouldBlur
+      ? `<td class="result-lock-cell" onclick="openModal('subscribe')" title="Subscribe to see VIP predictions"><span class="result-blur">•••••••••</span> 🔒</td>`
+      : `<td style="color:var(--gold)">${t.prediction}</td>`;
+    const oddsCell = shouldBlur
+      ? `<td class="result-lock-cell" onclick="openModal('subscribe')" title="Subscribe to see VIP odds"><span class="result-blur">•••</span></td>`
+      : `<td>${t.odds}</td>`;
+    return `
+      <tr>
+        <td><strong>${t.match}</strong></td>
+        <td><span style="font-size:12px">${getContFlag(t.continent)} ${t.competition}</span></td>
+        ${predCell}
+        ${oddsCell}
+        <td><span class="tip-badge badge-${t.type}">${t.type.toUpperCase()}</span></td>
+        <td>${t.result === 'won' ? '<span class="won-tag">✅ WON</span>' : '<span class="lost-tag">❌ LOST</span>'}</td>
+        <td style="color:var(--muted);font-size:12px">${formatDate(t.matchTime)}</td>
+      </tr>
+    `;
+  }).join('') || '<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--muted)">No results found</td></tr>';
+}
+function filterResults(filter, el) {
+  document.querySelectorAll('#page-results .filter-btn').forEach(b => b.classList.remove('active'));
+  if(el) el.classList.add('active');
+  renderResults(filter);
+}
+function renderDashboard() {
+  const el = document.getElementById('dashGrid');
+  if(!currentUser) {
+    el.innerHTML = `<div style="text-align:center;padding:60px;grid-column:1/-1"><p style="color:var(--muted)">Please <a style="color:var(--gold);cursor:pointer" onclick="openModal('login')">login</a> to view your dashboard</p></div>`;
+    return;
+  }
+  const sub = currentUser.subscription;
+  const isActive = sub && new Date(sub.end) > new Date();
+  const daysLeft = isActive ? Math.ceil((new Date(sub.end) - new Date()) / (1000*60*60*24)) : 0;
+  const totalDays = sub ? PLANS.find(p=>p.id===sub.plan)?.days || 30 : 30;
+  const pct = isActive ? Math.round((daysLeft/totalDays)*100) : 0;
+
+  el.innerHTML = `
+    <div class="dash-sidebar">
+      <div class="dash-avatar">${currentUser.name.charAt(0).toUpperCase()}</div>
+      <div class="dash-name">${currentUser.name}</div>
+      <div class="dash-email">${currentUser.email}</div>
+      <div class="sub-status-card">
+        <div class="${isActive?'sub-active':'sub-inactive'}">${isActive ? '✅ VIP ACTIVE' : '❌ No Subscription'}</div>
+        ${isActive ? `
+          <div class="countdown">${daysLeft}d</div>
+          <div style="font-size:12px;color:var(--muted)">Days remaining</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+          <div style="font-size:11px;color:var(--muted);margin-top:6px">Expires: ${formatDate(sub.end)}</div>
+        ` : '<p style="font-size:13px;color:var(--muted);margin-top:8px">No active subscription</p>'}
+      </div>
+      <button class="btn btn-gold" style="width:100%" onclick="openModal('subscribe')">${isActive ? 'Renew VIP' : 'Get VIP'}</button>
+      <ul class="dash-nav">
+        <li class="active">📊 Overview</li>
+        <li onclick="showPage('vip')">👑 VIP Tips</li>
+        <li onclick="showPage('results')">📋 Results</li>
+        <li onclick="openModal('review')">⭐ Write Review</li>
+      </ul>
+    </div>
+    <div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:16px;margin-bottom:24px">
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">STATUS</div>
+          <div style="font-weight:700;color:${isActive?'var(--green)':'var(--red)'}">${isActive?'Active':'Inactive'}</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">PLAN</div>
+          <div style="font-weight:700">${sub ? sub.planName : '—'}</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">DAYS LEFT</div>
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold)">${isActive?daysLeft:0}</div>
+        </div>
+        <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px">METHOD</div>
+          <div style="font-weight:700">${sub ? (sub.method === 'mpesa' ? '📱 M-Pesa' : '🌍 Flutterwave') : '—'}</div>
+        </div>
+      </div>
+      <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px">
+        <h3 style="font-family:'Bebas Neue',sans-serif;font-size:22px;margin-bottom:16px">PAYMENT HISTORY</h3>
+        ${sub ? `
+          <div class="table-wrap">
+          <table class="results-table" style="min-width:340px">
+            <thead><tr><th>Plan</th><th>Amount</th><th>Method</th><th>Date</th><th>Status</th></tr></thead>
+            <tbody>
+              <tr>
+                <td>${sub.planName}</td>
+                <td style="color:var(--gold)">${sub.symbol||'$'}${(sub.localAmount||sub.usdAmount||'—').toLocaleString()} <span style="font-size:11px;color:var(--muted)">(${sub.currency||'USD'})</span></td>
+                <td>${sub.method === 'mpesa' ? '📱 M-Pesa' : sub.method === 'card' ? '💳 Card' : '🌍 ' + sub.method}</td>
+                <td style="color:var(--muted);font-size:12px">${formatDate(sub.start)}</td>
+                <td><span class="sub-active">✅ Paid</span></td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        ` : '<p style="color:var(--muted);font-size:14px;text-align:center;padding:30px">No payment history yet</p>'}
+      </div>
+    </div>
+  `;
+}
+function renderReviews() {
+  const el = document.getElementById('reviewsGrid');
+  const fresh = JSON.parse(localStorage.getItem('bb_reviews') || 'null') || REVIEWS;
+  const approved = fresh.filter(r => r.status === 'approved');
+  el.innerHTML = approved.length
+    ? approved.map(r => renderReviewCard(r)).join('')
+    : '<div class="empty-state" style="grid-column:1/-1"><div class="icon">⭐</div><h3>No reviews yet</h3><p>Be the first to leave a review</p></div>';
+}
+function renderReviewCard(r) {
+  return `
+    <div class="review-card">
+      <div class="review-header">
+        <div class="review-avatar">${r.initials}</div>
+        <div><div class="review-name">${r.name}</div><div class="review-date">${formatDate(r.date)}</div></div>
+      </div>
+      <div class="stars">${'⭐'.repeat(r.rating)}</div>
+      <div class="review-text">${r.text}</div>
+    </div>
+  `;
+}
+async function submitReview() {
+  const text = document.getElementById('reviewText').value;
+  if(!text.trim()) return showToast('Please write your review','error');
+  const review = {
+    id: Date.now(),
+    name: currentUser.name,
+    initials: currentUser.name.charAt(0).toUpperCase(),
+    rating: selectedRating,
+    text: text,
+    date: new Date().toISOString().split('T')[0],
+    status: 'pending'
+  };
+  if(window.DB) {
+    await window.DB.addReview(review);
+  } else {
+    REVIEWS.push(review);
+    localStorage.setItem('bb_reviews', JSON.stringify(REVIEWS));
+  }
+  closeModal('review');
+  showToast('Review submitted! Awaiting admin approval 🙏','success');
+  document.getElementById('reviewText').value = '';
+  selectedRating = 5;
+  document.querySelectorAll('#starRating span').forEach(s => s.style.opacity = '1');
+}
+function setRating(n) {
+  selectedRating = n;
+  const stars = document.querySelectorAll('#starRating span');
+  stars.forEach((s,i) => s.style.opacity = i < n ? '1' : '0.3');
+}
+
+// ========== NOTIFICATIONS ==========
+function checkNotifications() {
+  if(!currentUser || !currentUser.subscription) return;
+  const sub = currentUser.subscription;
+  const daysLeft = Math.ceil((new Date(sub.end) - new Date()) / (1000*60*60*24));
+  if(daysLeft <= 5 && daysLeft > 0) {
+    document.getElementById('notifDot').style.display = 'block';
+  }
+}
+function showNotifications() {
+  if(!currentUser || !currentUser.subscription) return;
+  const daysLeft = Math.ceil((new Date(currentUser.subscription.end) - new Date()) / (1000*60*60*24));
+  showToast(`⚠️ Your VIP expires in ${daysLeft} day(s). Renew soon!`,'info');
+}
+
+// ========== HELPERS ==========
+function getContFlag(continent) {
+  const flags = {
+    'Europe':'🇪🇺','Africa':'🌍','South America':'🌎','North America':'🌎',
+    'Asia':'🌏','Oceania':'🌏','International':'🌐'
+  };
+  return flags[continent] || '🌐';
+}
+function formatTime(dt) {
+  if(!dt) return '';
+  return new Date(dt).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+}
+function formatDate(dt) {
+  if(!dt) return '';
+  return new Date(dt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+}
+function emptyState(msg) {
+  return `<div class="empty-state" style="grid-column:1/-1"><div class="icon">⚽</div><h3>${msg}</h3><p style="color:var(--muted)">Check back later for new predictions</p></div>`;
+}
+function showToast(msg, type='info') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast show ${type}`;
+  setTimeout(() => t.className = 'toast', 3500);
+}
+</script>
+</body>
+</html>
