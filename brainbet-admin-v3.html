@@ -1,0 +1,1806 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BrainBet Pro – Admin Panel</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --gold:#F0B429;--gold-dark:#C9941A;--green:#00C853;--red:#FF3D57;
+  --bg:#0A0E1A;--bg2:#111827;--bg3:#1C2333;--card:#161D2E;
+  --border:rgba(240,180,41,0.15);--text:#E8EAF0;--muted:#6B7280;--radius:12px;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Outfit',sans-serif;background:var(--bg);color:var(--text);display:flex;min-height:100vh;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--gold);border-radius:3px;}
+
+/* SIDEBAR */
+.sidebar{width:240px;background:var(--bg2);border-right:1px solid var(--border);display:flex;flex-direction:column;position:fixed;top:0;left:0;bottom:0;z-index:100;transition:transform .3s;}
+.sidebar-logo{padding:20px 24px;border-bottom:1px solid var(--border);}
+.logo{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--gold);}
+.logo span{color:var(--text);}
+.sidebar-nav{padding:16px 12px;flex:1;overflow-y:auto;}
+.nav-item{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:10px;cursor:pointer;font-size:14px;font-weight:500;color:var(--muted);transition:all .2s;margin-bottom:4px;}
+.nav-item:hover,.nav-item.active{background:rgba(240,180,41,0.1);color:var(--gold);}
+.nav-item .icon{font-size:18px;width:20px;text-align:center;}
+.nav-section{font-size:10px;font-weight:700;color:var(--muted);letter-spacing:1.5px;padding:16px 14px 8px;text-transform:uppercase;}
+.sidebar-footer{padding:16px;border-top:1px solid var(--border);}
+.admin-info{display:flex;align-items:center;gap:10px;}
+.admin-avatar{width:36px;height:36px;background:var(--gold);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--bg);font-size:14px;}
+.admin-name{font-size:14px;font-weight:600;}
+.admin-role{font-size:11px;color:var(--muted);}
+
+/* MAIN */
+.main{margin-left:240px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 28px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:50;}
+.topbar-title{font-family:'Bebas Neue',sans-serif;font-size:22px;color:#fff;}
+.topbar-actions{display:flex;gap:10px;align-items:center;}
+.btn{padding:9px 18px;border-radius:8px;border:none;cursor:pointer;font-family:'Outfit',sans-serif;font-size:13px;font-weight:600;transition:all .2s;}
+.btn-gold{background:var(--gold);color:var(--bg);}
+.btn-gold:hover{background:var(--gold-dark);}
+.btn-outline{background:transparent;border:1px solid var(--border);color:var(--muted);}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);}
+.btn-red{background:rgba(255,61,87,0.15);color:var(--red);border:1px solid rgba(255,61,87,0.2);}
+.btn-red:hover{background:var(--red);color:#fff;}
+.btn-green{background:rgba(0,200,83,0.15);color:var(--green);border:1px solid rgba(0,200,83,0.2);}
+.btn-green:hover{background:var(--green);color:#fff;}
+.btn-sm{padding:6px 12px;font-size:12px;}
+
+/* CONTENT */
+.content{padding:28px;flex:1;}
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* STATS ROW */
+.stats-row{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-bottom:28px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;position:relative;overflow:hidden;}
+.stat-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold),var(--gold-dark));}
+.stat-num{font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--gold);line-height:1;}
+.stat-label{font-size:13px;color:var(--muted);margin-top:4px;}
+.stat-change{font-size:11px;margin-top:6px;}
+.stat-up{color:var(--green);}
+.stat-down{color:var(--red);}
+
+/* CARD */
+.admin-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;margin-bottom:20px;}
+.admin-card-header{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;}
+.admin-card-title{font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fff;}
+.admin-card-body{padding:20px;}
+
+/* TABLE */
+.admin-table{width:100%;border-collapse:collapse;}
+.admin-table th{padding:11px 16px;text-align:left;font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px;border-bottom:1px solid var(--border);background:var(--bg3);}
+.admin-table td{padding:13px 16px;font-size:13px;border-bottom:1px solid rgba(255,255,255,0.03);vertical-align:middle;}
+.admin-table tr:hover td{background:rgba(255,255,255,0.02);}
+.admin-table tr:last-child td{border-bottom:none;}
+
+/* FORM */
+.form-row{display:grid;gap:16px;margin-bottom:16px;}
+.form-row.cols-2{grid-template-columns:1fr 1fr;}
+.form-row.cols-3{grid-template-columns:1fr 1fr 1fr;}
+.form-group{display:flex;flex-direction:column;gap:6px;}
+.form-group label{font-size:12px;font-weight:700;color:var(--muted);letter-spacing:.5px;text-transform:uppercase;}
+.form-group input,.form-group select,.form-group textarea{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;outline:none;transition:border-color .2s;width:100%;}
+.form-group input:focus,.form-group select:focus,.form-group textarea:focus{border-color:var(--gold);}
+.form-group select option{background:var(--bg3);}
+
+/* AUTOCOMPLETE */
+.autocomplete-wrap{position:relative;}
+.autocomplete-dropdown{position:absolute;top:100%;left:0;right:0;background:var(--bg2);border:1px solid var(--gold);border-top:none;border-radius:0 0 10px 10px;max-height:260px;overflow-y:auto;z-index:200;display:none;box-shadow:0 10px 30px rgba(0,0,0,0.5);}
+.autocomplete-dropdown.open{display:block;}
+.ac-item{display:flex;align-items:center;gap:12px;padding:10px 14px;cursor:pointer;transition:background .15s;border-bottom:1px solid rgba(255,255,255,0.04);}
+.ac-item:hover{background:rgba(240,180,41,0.08);}
+.ac-logo{width:30px;height:30px;border-radius:50%;object-fit:contain;background:var(--bg3);padding:3px;}
+.ac-logo-placeholder{width:30px;height:30px;border-radius:50%;background:var(--bg3);display:flex;align-items:center;justify-content:center;font-size:14px;}
+.ac-info{flex:1;}
+.ac-team-name{font-size:14px;font-weight:600;}
+.ac-meta{font-size:11px;color:var(--muted);}
+.ac-flag{font-size:16px;}
+.selected-team-card{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;display:flex;align-items:center;gap:12px;margin-top:6px;}
+.selected-team-card .remove-btn{margin-left:auto;background:var(--bg);border:none;color:var(--muted);cursor:pointer;font-size:16px;padding:4px;border-radius:4px;}
+.selected-team-card .remove-btn:hover{color:var(--red);}
+
+/* COMPETITION SELECT */
+.comp-options{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
+.comp-option{background:var(--bg3);border:2px solid var(--border);border-radius:8px;padding:10px 14px;cursor:pointer;transition:all .2s;font-size:13px;}
+.comp-option:hover,.comp-option.selected{border-color:var(--gold);background:rgba(240,180,41,0.06);color:var(--gold);}
+.comp-option .comp-type{font-size:10px;color:var(--muted);margin-top:2px;}
+
+/* BADGE */
+.badge{padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700;}
+.badge-free{background:rgba(0,200,83,0.15);color:var(--green);}
+.badge-vip{background:rgba(240,180,41,0.15);color:var(--gold);}
+.badge-live{background:rgba(255,61,87,0.15);color:var(--red);}
+.badge-active{background:rgba(0,200,83,0.15);color:var(--green);}
+.badge-inactive{background:rgba(255,61,87,0.15);color:var(--red);}
+.badge-pending{background:rgba(107,114,128,0.2);color:var(--muted);}
+.badge-won{background:rgba(0,200,83,0.15);color:var(--green);}
+.badge-lost{background:rgba(255,61,87,0.15);color:var(--red);}
+
+/* MODAL */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(6px);z-index:1000;display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;pointer-events:none;transition:opacity .3s;}
+.modal-overlay.open{opacity:1;pointer-events:all;}
+.modal{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:28px;width:100%;max-width:680px;max-height:90vh;overflow-y:auto;position:relative;transform:translateY(20px);transition:transform .3s;}
+.modal-overlay.open .modal{transform:translateY(0);}
+.modal-close{position:absolute;top:14px;right:14px;background:var(--bg3);border:none;color:var(--muted);width:30px;height:30px;border-radius:50%;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;}
+.modal-close:hover{color:#fff;background:var(--red);}
+.modal h2{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--gold);margin-bottom:20px;}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;right:24px;background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px 18px;font-size:13px;z-index:3000;transform:translateY(100px);opacity:0;transition:all .3s;max-width:280px;}
+.toast.show{transform:translateY(0);opacity:1;}
+.toast.success{border-color:var(--green);color:var(--green);}
+.toast.error{border-color:var(--red);color:var(--red);}
+.toast.info{border-color:var(--gold);color:var(--gold);}
+
+/* LOGIN SCREEN */
+.login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;}
+.login-box{background:var(--bg2);border:1px solid var(--border);border-radius:20px;padding:40px;width:380px;text-align:center;}
+
+/* TOGGLE */
+.toggle{position:relative;display:inline-block;width:44px;height:24px;}
+.toggle input{opacity:0;width:0;height:0;}
+.slider-toggle{position:absolute;cursor:pointer;inset:0;background:var(--bg3);border-radius:12px;transition:.3s;}
+.slider-toggle::before{content:'';position:absolute;height:18px;width:18px;left:3px;bottom:3px;background:var(--muted);border-radius:50%;transition:.3s;}
+.toggle input:checked+.slider-toggle{background:var(--gold);}
+.toggle input:checked+.slider-toggle::before{transform:translateX(20px);background:var(--bg);}
+
+/* RESPONSIVE */
+@media(max-width:768px){
+  .sidebar{transform:translateX(-100%);}
+  .sidebar.open{transform:translateX(0);}
+  .main{margin-left:0;}
+  .stats-row{grid-template-columns:1fr 1fr;}
+  .form-row.cols-2,.form-row.cols-3{grid-template-columns:1fr;}
+}
+
+.search-bar{background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:9px 14px;color:var(--text);font-family:'Outfit',sans-serif;font-size:13px;outline:none;width:240px;}
+.search-bar:focus{border-color:var(--gold);}
+
+.result-select{display:flex;gap:8px;flex-wrap:wrap;}
+.result-opt{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:transparent;color:var(--muted);font-family:'Outfit',sans-serif;font-size:12px;cursor:pointer;transition:all .2s;}
+.result-opt:hover{border-color:var(--gold);color:var(--gold);}
+.result-opt.sel-won{border-color:var(--green);background:rgba(0,200,83,0.1);color:var(--green);}
+.result-opt.sel-lost{border-color:var(--red);background:rgba(255,61,87,0.1);color:var(--red);}
+.result-opt.sel-pending{border-color:var(--gold);background:rgba(240,180,41,0.1);color:var(--gold);}
+</style>
+<!-- ======================================================
+     FIREBASE SDK
+     ====================================================== -->
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getFirestore, collection, doc, getDocs, getDoc, setDoc, addDoc, updateDoc, deleteDoc, onSnapshot, query, orderBy, serverTimestamp, writeBatch }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+// ══════════════════════════════════════════════════════
+// 🔑 SAME CONFIG AS brainbet.html — must match exactly
+// ══════════════════════════════════════════════════════
+const firebaseConfig = {
+  apiKey:            "REPLACE_WITH_YOUR_API_KEY",
+  authDomain:        "REPLACE_WITH_YOUR_AUTH_DOMAIN",
+  projectId:         "REPLACE_WITH_YOUR_PROJECT_ID",
+  storageBucket:     "REPLACE_WITH_YOUR_STORAGE_BUCKET",
+  messagingSenderId: "REPLACE_WITH_YOUR_MESSAGING_SENDER_ID",
+  appId:             "REPLACE_WITH_YOUR_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const db  = getFirestore(app);
+
+// ══════════════════════════════════════════════════════
+// ADMIN DB — all Firestore operations for admin panel
+// ══════════════════════════════════════════════════════
+window.AdminDB = {
+
+  // ── TIPS ─────────────────────────────────────────
+  async saveTip(tip) {
+    const id = tip.id ? String(tip.id) : String(Date.now());
+    await setDoc(doc(db,'tips', id), {...tip, id, updatedAt: serverTimestamp()});
+    localStorage.setItem('bb_tips', JSON.stringify(window.TIPS));
+    return id;
+  },
+  async deleteTip(id) {
+    await deleteDoc(doc(db,'tips', String(id)));
+  },
+  listenTips(callback) {
+    return onSnapshot(query(collection(db,'tips'), orderBy('createdAt','desc')), snap => {
+      const tips = snap.docs.map(d => ({...d.data(), id: d.id}));
+      window.TIPS = tips;
+      localStorage.setItem('bb_tips', JSON.stringify(tips));
+      callback(tips);
+    });
+  },
+
+  // ── REVIEWS ──────────────────────────────────────
+  async updateReview(id, data) {
+    await updateDoc(doc(db,'reviews', String(id)), data);
+  },
+  async deleteReview(id) {
+    await deleteDoc(doc(db,'reviews', String(id)));
+  },
+  listenReviews(callback) {
+    return onSnapshot(query(collection(db,'reviews'), orderBy('createdAt','desc')), snap => {
+      const reviews = snap.docs.map(d => ({...d.data(), id: d.id}));
+      window.REVIEWS = reviews;
+      localStorage.setItem('bb_reviews', JSON.stringify(reviews));
+      callback(reviews);
+    });
+  },
+
+  // ── FEATURED GAMES ───────────────────────────────
+  async saveFeatured(game) {
+    const ref = await addDoc(collection(db,'featured'), {...game, createdAt: serverTimestamp()});
+    return ref.id;
+  },
+  async updateFeatured(id, data) {
+    await updateDoc(doc(db,'featured', String(id)), data);
+  },
+  async deleteFeatured(id) {
+    await deleteDoc(doc(db,'featured', String(id)));
+  },
+  listenFeatured(callback) {
+    return onSnapshot(collection(db,'featured'), snap => {
+      const games = snap.docs.map(d => ({...d.data(), id: d.id}));
+      window.FEATURED_GAMES = games;
+      localStorage.setItem('bb_featured', JSON.stringify(games));
+      callback(games);
+    });
+  },
+
+  // ── PLANS / PRICING ──────────────────────────────
+  async savePlans(plans) {
+    await setDoc(doc(db,'settings','plans'), {plans, updatedAt: serverTimestamp()});
+    localStorage.setItem('bb_plans', JSON.stringify(plans));
+  },
+
+  // ── WIN SLIDES ───────────────────────────────────
+  async saveSlide(slide) {
+    await setDoc(doc(db,'slides', String(slide.id)), slide);
+  },
+  async deleteSlide(id) {
+    await deleteDoc(doc(db,'slides', String(id)));
+  },
+
+  // ── USERS ────────────────────────────────────────
+  listenUsers(callback) {
+    return onSnapshot(collection(db,'users'), snap => {
+      const users = snap.docs.map(d => ({uid: d.id, ...d.data()}));
+      window.USERS = users;
+      localStorage.setItem('bb_users', JSON.stringify(users));
+      callback(users);
+    });
+  },
+};
+
+// ══════════════════════════════════════════════════════
+// BOOT — start real-time listeners after admin logs in
+// ══════════════════════════════════════════════════════
+window.startAdminListeners = function() {
+  window.AdminDB.listenTips(tips => {
+    window.TIPS = tips;
+    if(typeof renderTipsTable === 'function' && document.getElementById('panel-tips')?.classList.contains('active')) renderTipsTable();
+    if(typeof initDashboard === 'function'  && document.getElementById('panel-dashboard')?.classList.contains('active')) initDashboard();
+  });
+  window.AdminDB.listenReviews(reviews => {
+    window.REVIEWS = reviews;
+    if(typeof renderAdminReviews === 'function' && document.getElementById('panel-reviews')?.classList.contains('active')) renderAdminReviews();
+  });
+  window.AdminDB.listenFeatured(games => {
+    window.FEATURED_GAMES = games;
+    if(typeof renderFeaturedPanel === 'function' && document.getElementById('panel-featured')?.classList.contains('active')) renderFeaturedPanel();
+  });
+  window.AdminDB.listenUsers(users => {
+    window.USERS = users;
+    if(typeof renderUsersTable === 'function' && document.getElementById('panel-users')?.classList.contains('active')) renderUsersTable();
+  });
+};
+</script>
+</head>
+<body>
+
+<!-- LOGIN SCREEN -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="logo" style="font-size:28px;margin-bottom:6px">BRAIN<span style="color:var(--text)">BET</span> PRO</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:28px">Admin Panel</div>
+    <div style="text-align:left">
+      <div class="form-group" style="margin-bottom:14px"><label>Username</label><input type="text" id="adminUser" placeholder="admin" value="admin"></div>
+      <div class="form-group" style="margin-bottom:20px"><label>Password</label><input type="password" id="adminPass" placeholder="admin123" value="admin123"></div>
+      <button class="btn btn-gold" style="width:100%" onclick="adminLogin()">Login to Admin</button>
+      <p style="font-size:11px;color:var(--muted);margin-top:12px">Default: admin / admin123</p>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<aside class="sidebar" id="sidebar">
+  <div class="sidebar-logo">
+    <div class="logo">BRAIN<span>BET</span> PRO</div>
+    <div style="font-size:11px;color:var(--muted);margin-top:2px">Admin Panel</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Main</div>
+    <div class="nav-item active" onclick="showPanel('dashboard',this)"><span class="icon">📊</span>Dashboard</div>
+    <div class="nav-section">Tips Management</div>
+    <div class="nav-item" onclick="showPanel('tips',this)"><span class="icon">⚽</span>All Tips</div>
+    <div class="nav-item" onclick="showPanel('addtip',this)"><span class="icon">➕</span>Add New Tip</div>
+    <div class="nav-section">Users & Payments</div>
+    <div class="nav-item" onclick="showPanel('users',this)"><span class="icon">👥</span>Users</div>
+    <div class="nav-item" onclick="showPanel('payments',this)"><span class="icon">💰</span>Payments</div>
+    <div class="nav-section">Content</div>
+    <div class="nav-item" onclick="showPanel('featured',this)"><span class="icon">🏟️</span>Featured Games</div>
+    <div class="nav-item" onclick="showPanel('reviews',this)"><span class="icon">⭐</span>Reviews</div>
+    <div class="nav-item" onclick="showPanel('slider',this)"><span class="icon">🖼️</span>Win Slider</div>
+    <div class="nav-section">Settings</div>
+    <div class="nav-item" onclick="showPanel('settings',this)"><span class="icon">⚙️</span>Settings</div>
+    <div class="nav-item" onclick="window.open('brainbet.html','_blank')"><span class="icon">🌐</span>View Site</div>
+  </nav>
+  <div class="sidebar-footer">
+    <div class="admin-info">
+      <div class="admin-avatar">A</div>
+      <div><div class="admin-name">Administrator</div><div class="admin-role">Super Admin</div></div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN CONTENT -->
+<main class="main">
+  <div class="topbar">
+    <div class="topbar-title" id="topbarTitle">DASHBOARD</div>
+    <div class="topbar-actions">
+      <input type="text" class="search-bar" placeholder="Search..." id="globalSearch" oninput="handleSearch(this.value)">
+      <button class="btn btn-gold" onclick="showPanel('addtip',document.querySelector('[onclick*=addtip]'))">+ New Tip</button>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- DASHBOARD PANEL -->
+    <div class="panel active" id="panel-dashboard">
+      <div class="stats-row" id="statsRow"></div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div class="admin-card">
+          <div class="admin-card-header"><div class="admin-card-title">RECENT TIPS</div><button class="btn btn-outline btn-sm" onclick="showPanel('tips',null)">View All</button></div>
+          <div style="overflow-x:auto"><table class="admin-table" id="recentTipsTable"></table></div>
+        </div>
+        <div class="admin-card">
+          <div class="admin-card-header"><div class="admin-card-title">RECENT PAYMENTS</div></div>
+          <div style="overflow-x:auto"><table class="admin-table" id="recentPayTable"></table></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- TIPS PANEL -->
+    <div class="panel" id="panel-tips">
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <div class="admin-card-title">ALL TIPS</div>
+          <div style="display:flex;gap:8px">
+            <select class="search-bar" style="width:auto" onchange="filterTipsTable(this.value)" id="tipTypeFilter">
+              <option value="all">All Types</option>
+              <option value="free">Free Only</option>
+              <option value="vip">VIP Only</option>
+            </select>
+            <button class="btn btn-gold btn-sm" onclick="showPanel('addtip',document.querySelector('[onclick*=addtip]'))">+ Add Tip</button>
+          </div>
+        </div>
+        <div style="overflow-x:auto"><table class="admin-table" id="allTipsTable"></table></div>
+      </div>
+    </div>
+
+    <!-- ADD TIP PANEL -->
+    <div class="panel" id="panel-addtip">
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <div class="admin-card-title" id="tipFormTitle">ADD NEW TIP</div>
+        </div>
+        <div class="admin-card-body">
+          <!-- Team Selection -->
+          <div style="background:var(--bg3);border-radius:10px;padding:16px;margin-bottom:20px;border:1px solid var(--border)">
+            <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;margin-bottom:14px">TEAM SELECTION (Start typing to search)</div>
+            <div class="form-row cols-2">
+              <!-- Home Team -->
+              <div class="form-group">
+                <label>Home Team</label>
+                <div class="autocomplete-wrap">
+                  <input type="text" id="homeTeamInput" placeholder="Search team name..." autocomplete="off" oninput="searchTeams('home',this.value)" onfocus="searchTeams('home',this.value)">
+                  <div class="autocomplete-dropdown" id="homeDropdown"></div>
+                </div>
+                <div id="homeTeamSelected" style="display:none" class="selected-team-card">
+                  <img id="homeTeamLogo" class="ac-logo" src="" alt="" onerror="this.style.display='none';document.getElementById('homeTeamEmoji').style.display='flex'">
+                  <div class="ac-logo-placeholder" id="homeTeamEmoji" style="display:none">⚽</div>
+                  <div><div id="homeTeamName" style="font-weight:600;font-size:14px"></div><div id="homeTeamMeta" style="font-size:11px;color:var(--muted)"></div></div>
+                  <button class="remove-btn" onclick="clearTeam('home')">✕</button>
+                </div>
+              </div>
+              <!-- Away Team -->
+              <div class="form-group">
+                <label>Away Team</label>
+                <div class="autocomplete-wrap">
+                  <input type="text" id="awayTeamInput" placeholder="Search team name..." autocomplete="off" oninput="searchTeams('away',this.value)" onfocus="searchTeams('away',this.value)">
+                  <div class="autocomplete-dropdown" id="awayDropdown"></div>
+                </div>
+                <div id="awayTeamSelected" style="display:none" class="selected-team-card">
+                  <img id="awayTeamLogo" class="ac-logo" src="" alt="" onerror="this.style.display='none';document.getElementById('awayTeamEmoji').style.display='flex'">
+                  <div class="ac-logo-placeholder" id="awayTeamEmoji" style="display:none">⚽</div>
+                  <div><div id="awayTeamName" style="font-weight:600;font-size:14px"></div><div id="awayTeamMeta" style="font-size:11px;color:var(--muted)"></div></div>
+                  <button class="remove-btn" onclick="clearTeam('away')">✕</button>
+                </div>
+              </div>
+            </div>
+            <!-- Smart Competition Selector -->
+            <div id="competitionSection" style="display:none;margin-top:14px">
+              <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:1px;margin-bottom:10px">SELECT COMPETITION</div>
+              <div class="comp-options" id="compOptions"></div>
+              <div style="margin-top:12px">
+                <label style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px">OR ENTER CUSTOM COMPETITION</label>
+                <input type="text" id="customComp" placeholder="Type competition name..." style="margin-top:6px;width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-family:'Outfit',sans-serif;font-size:14px;outline:none;">
+              </div>
+            </div>
+          </div>
+
+          <!-- Match Details -->
+          <div class="form-row cols-3">
+            <div class="form-group">
+              <label>Match Date & Time</label>
+              <input type="datetime-local" id="matchTime">
+            </div>
+            <div class="form-group">
+              <label>Tip Type</label>
+              <select id="tipType">
+                <option value="free">Free</option>
+                <option value="vip">VIP 👑</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Status</label>
+              <select id="tipStatus">
+                <option value="not_started">Not Started</option>
+                <option value="live">Live 🔴</option>
+                <option value="ended">Ended</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-row cols-3">
+            <div class="form-group" style="grid-column:1/3">
+              <label>Prediction</label>
+              <input type="text" id="tipPrediction" placeholder="e.g. Arsenal Win, Over 2.5 Goals, Both Teams to Score">
+            </div>
+            <div class="form-group">
+              <label>Odds</label>
+              <input type="number" id="tipOdds" placeholder="e.g. 1.85" step="0.01" min="1">
+            </div>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-group">
+              <label>Result</label>
+              <select id="tipResult">
+                <option value="pending">Pending</option>
+                <option value="won">Won ✅</option>
+                <option value="lost">Lost ❌</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Notes (optional)</label>
+              <input type="text" id="tipNotes" placeholder="Any additional notes...">
+            </div>
+          </div>
+          <div style="display:flex;gap:12px;margin-top:8px">
+            <button class="btn btn-gold" onclick="saveTip()" style="padding:12px 32px">Save Tip</button>
+            <button class="btn btn-outline" onclick="clearTipForm()">Clear Form</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- USERS PANEL -->
+    <div class="panel" id="panel-users">
+      <div class="admin-card">
+        <div class="admin-card-header"><div class="admin-card-title">ALL USERS</div><div id="userCount" style="font-size:13px;color:var(--muted)"></div></div>
+        <div style="overflow-x:auto"><table class="admin-table" id="usersTable"></table></div>
+      </div>
+    </div>
+
+    <!-- PAYMENTS PANEL -->
+    <div class="panel" id="panel-payments">
+      <div class="admin-card">
+        <div class="admin-card-header"><div class="admin-card-title">PAYMENT RECORDS</div></div>
+        <div style="overflow-x:auto"><table class="admin-table" id="paymentsTable"></table></div>
+      </div>
+    </div>
+
+    <!-- REVIEWS PANEL -->
+    <div class="panel" id="panel-reviews">
+      <div class="admin-card">
+        <div class="admin-card-header"><div class="admin-card-title">REVIEWS & TESTIMONIALS</div></div>
+        <div style="overflow-x:auto"><table class="admin-table" id="reviewsTable"></table></div>
+      </div>
+    </div>
+
+    <!-- SLIDER PANEL -->
+    <div class="panel" id="panel-slider">
+      <div class="admin-card">
+        <div class="admin-card-header"><div class="admin-card-title">WIN PROOF SLIDER</div><button class="btn btn-gold btn-sm" onclick="openSlideModal()">+ Add Slide</button></div>
+        <div class="admin-card-body" id="sliderItems"></div>
+      </div>
+    </div>
+
+    <!-- FEATURED GAMES PANEL -->
+    <div class="panel" id="panel-featured">
+      <div class="admin-card">
+        <div class="admin-card-header">
+          <div class="admin-card-title">🏟️ FEATURED GAMES OF THE DAY</div>
+          <button class="btn btn-gold btn-sm" onclick="openFeaturedModal()">+ Add Featured Game</button>
+        </div>
+        <div class="admin-card-body">
+          <p style="font-size:13px;color:var(--muted);margin-bottom:16px">These games appear in the banner slider on the main site, just below the nav bar. Each card shows team images, team names, competition and kickoff time.</p>
+          <div id="featuredList"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SETTINGS PANEL -->
+    <div class="panel" id="panel-settings">
+      <div class="admin-card">
+        <div class="admin-card-header"><div class="admin-card-title">PLATFORM SETTINGS</div></div>
+        <div class="admin-card-body">
+
+          <!-- USD PRICING EDITOR -->
+          <div style="background:rgba(240,180,41,0.06);border:1px solid rgba(240,180,41,0.2);border-radius:12px;padding:20px;margin-bottom:20px">
+            <div style="font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--gold);margin-bottom:4px">💲 SUBSCRIPTION PRICING (USD)</div>
+            <p style="font-size:12px;color:var(--muted);margin-bottom:16px">Edit prices in USD — all country currencies auto-convert from these values on the main site.</p>
+            <div class="form-row cols-3">
+              <div class="form-group">
+                <label>Weekly Price ($)</label>
+                <input type="number" id="priceWeekly" value="8" min="1" step="0.5">
+                <div style="font-size:11px;color:var(--muted);margin-top:4px">Save amount ($): <input type="number" id="saveWeekly" value="2" min="0" step="0.5" style="width:60px;display:inline;padding:3px 6px;font-size:11px"></div>
+              </div>
+              <div class="form-group">
+                <label>Monthly Price ($) <span style="color:var(--gold);font-size:10px">★ POPULAR</span></label>
+                <input type="number" id="priceMonthly" value="30" min="1" step="1">
+                <div style="font-size:11px;color:var(--muted);margin-top:4px">Save amount ($): <input type="number" id="saveMonthly" value="10" min="0" step="1" style="width:60px;display:inline;padding:3px 6px;font-size:11px"></div>
+              </div>
+              <div class="form-group">
+                <label>3-Month Price ($) <span style="color:var(--green);font-size:10px">★ BEST VALUE</span></label>
+                <input type="number" id="priceQuarterly" value="100" min="1" step="1">
+                <div style="font-size:11px;color:var(--muted);margin-top:4px">Save amount ($): <input type="number" id="saveQuarterly" value="20" min="0" step="1" style="width:60px;display:inline;padding:3px 6px;font-size:11px"></div>
+              </div>
+            </div>
+            <div style="background:var(--bg3);border-radius:8px;padding:12px;margin-bottom:16px;font-size:12px;">
+              <div style="font-weight:700;color:var(--text);margin-bottom:8px">Live preview — what clients see:</div>
+              <div id="pricePreview" style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;"></div>
+            </div>
+            <button class="btn btn-gold" onclick="savePricing()">💾 Save & Publish Prices</button>
+          </div>
+
+          <div class="form-row cols-2">
+            <div class="form-group"><label>Site Name</label><input type="text" id="siteName" value="BrainBet Pro"></div>
+            <div class="form-group"><label>Contact Email</label><input type="text" id="siteEmail" value="support@brainbetpro.com"></div>
+          </div>
+          <div class="form-row cols-2">
+            <div class="form-group"><label>M-Pesa Paybill/Till</label><input type="text" placeholder="Enter M-Pesa number"></div>
+            <div class="form-group"><label>Flutterwave Public Key</label><input type="text" placeholder="FLWPUBK_TEST_..."></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:14px;margin-top:8px">
+            <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg3);padding:14px 16px;border-radius:10px">
+              <div><div style="font-weight:600;font-size:14px">Maintenance Mode</div><div style="font-size:12px;color:var(--muted)">Disable public access temporarily</div></div>
+              <label class="toggle"><input type="checkbox"><span class="slider-toggle"></span></label>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:space-between;background:var(--bg3);padding:14px 16px;border-radius:10px">
+              <div><div style="font-weight:600;font-size:14px">Expiry Notifications</div><div style="font-size:12px;color:var(--muted)">Notify users 5 days before expiry</div></div>
+              <label class="toggle"><input type="checkbox" checked><span class="slider-toggle"></span></label>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /content -->
+</main>
+
+<!-- Featured Game Modal -->
+<div class="modal-overlay" id="modal-featured">
+  <div class="modal" style="max-width:580px">
+    <button class="modal-close" onclick="closeModal('featured')">✕</button>
+    <h2>ADD FEATURED GAME</h2>
+    <p style="margin-bottom:16px">Appears in the top banner. Each side shows: Player photo + Team badge side by side, then Team name below.</p>
+
+    <!-- Team names -->
+    <div class="form-row cols-2">
+      <div class="form-group">
+        <label>Home Team Name</label>
+        <input type="text" id="fgHomeName" placeholder="e.g. Manchester United">
+      </div>
+      <div class="form-group">
+        <label>Away Team Name</label>
+        <input type="text" id="fgAwayName" placeholder="e.g. Manchester City">
+      </div>
+    </div>
+
+    <!-- Home side: player + badge -->
+    <div style="background:var(--bg3);border-radius:10px;padding:14px;margin-bottom:12px">
+      <div style="font-size:11px;font-weight:700;color:var(--gold);letter-spacing:.5px;margin-bottom:10px">🏠 HOME TEAM IMAGES</div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label>Player Photo URL</label>
+          <input type="text" id="fgHomePlayer" placeholder="https://... (e.g. Bruno Fernandes photo)">
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">Right-click any player image online → Copy image address</div>
+        </div>
+        <div class="form-group">
+          <label>Team Badge/Logo URL</label>
+          <input type="text" id="fgHomeLogo" placeholder="https://... (team badge)">
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">Shows as small badge overlapping the player photo</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Away side: badge + player -->
+    <div style="background:var(--bg3);border-radius:10px;padding:14px;margin-bottom:12px">
+      <div style="font-size:11px;font-weight:700;color:var(--gold);letter-spacing:.5px;margin-bottom:10px">✈️ AWAY TEAM IMAGES</div>
+      <div class="form-row cols-2">
+        <div class="form-group">
+          <label>Team Badge/Logo URL</label>
+          <input type="text" id="fgAwayLogo" placeholder="https://... (team badge)">
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">Shows as small badge overlapping the player photo</div>
+        </div>
+        <div class="form-group">
+          <label>Player Photo URL</label>
+          <input type="text" id="fgAwayPlayer" placeholder="https://... (e.g. Haaland photo)">
+          <div style="font-size:10px;color:var(--muted);margin-top:3px">Right-click any player image online → Copy image address</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Match info -->
+    <div class="form-row cols-2">
+      <div class="form-group">
+        <label>Competition</label>
+        <input type="text" id="fgComp" placeholder="e.g. English Premier League">
+      </div>
+      <div class="form-group">
+        <label>Kickoff Date & Time</label>
+        <input type="datetime-local" id="fgKickoff">
+      </div>
+    </div>
+    <div class="form-group" style="margin-bottom:14px">
+      <label>Background Image URL (optional — stadium photo)</label>
+      <input type="text" id="fgBgImage" placeholder="https://... stadium or match atmosphere photo">
+    </div>
+
+    <!-- Live Preview -->
+    <div style="font-size:11px;font-weight:700;color:var(--muted);letter-spacing:.5px;margin-bottom:6px">LIVE PREVIEW</div>
+    <div style="border-radius:10px;overflow:hidden;margin-bottom:14px;position:relative;height:110px;border:1px solid var(--border);" id="fgPreview">
+      <div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;background:var(--bg3)">Click Preview to see how it looks →</div>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn btn-outline btn-sm" onclick="previewFeatured()">👁 Preview</button>
+      <button class="btn btn-gold" style="flex:1;padding:11px" onclick="saveFeaturedGame()">✅ Add to Banner</button>
+    </div>
+  </div>
+</div>
+
+<!-- Edit Tip Modal -->
+<div class="modal-overlay" id="modal-edit">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('edit')">✕</button>
+    <h2>EDIT TIP</h2>
+    <div class="form-row cols-2">
+      <div class="form-group"><label>Match</label><input type="text" id="editMatch"></div>
+      <div class="form-group"><label>Competition</label><input type="text" id="editComp"></div>
+    </div>
+    <div class="form-row cols-3">
+      <div class="form-group"><label>Prediction</label><input type="text" id="editPred"></div>
+      <div class="form-group"><label>Odds</label><input type="number" id="editOdds" step="0.01"></div>
+      <div class="form-group"><label>Type</label><select id="editType"><option value="free">Free</option><option value="vip">VIP</option></select></div>
+    </div>
+    <div class="form-row cols-3">
+      <div class="form-group"><label>Status</label><select id="editStatus"><option value="not_started">Not Started</option><option value="live">Live</option><option value="ended">Ended</option></select></div>
+      <div class="form-group"><label>Result</label><select id="editResult"><option value="pending">Pending</option><option value="won">Won</option><option value="lost">Lost</option></select></div>
+      <div class="form-group"><label>Match Time</label><input type="datetime-local" id="editTime"></div>
+    </div>
+    <input type="hidden" id="editId">
+    <button class="btn btn-gold" onclick="saveEditTip()" style="width:100%;margin-top:8px">Save Changes</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// =============================================
+// GLOBAL TEAMS DATABASE — 30 Nations, 5 Leagues Each
+// =============================================
+const TEAMS_DB = {
+  // ---- ENGLAND ----
+  "English Premier League": {
+    country:"England", continent:"Europe", flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", type:"domestic",
+    teams:[
+      {name:"Arsenal",logo:"https://upload.wikimedia.org/wikipedia/en/5/53/Arsenal_FC.svg"},
+      {name:"Chelsea",logo:"https://upload.wikimedia.org/wikipedia/en/c/cc/Chelsea_FC.svg"},
+      {name:"Manchester City",logo:"https://upload.wikimedia.org/wikipedia/en/e/eb/Manchester_City_FC_badge.svg"},
+      {name:"Manchester United",logo:"https://upload.wikimedia.org/wikipedia/en/7/7a/Manchester_United_FC_crest.svg"},
+      {name:"Liverpool",logo:"https://upload.wikimedia.org/wikipedia/en/0/0c/Liverpool_FC.svg"},
+      {name:"Tottenham Hotspur",logo:"https://upload.wikimedia.org/wikipedia/en/b/b4/Tottenham_Hotspur.svg"},
+      {name:"Newcastle United",logo:"https://upload.wikimedia.org/wikipedia/en/5/56/Newcastle_United_Logo.svg"},
+      {name:"Aston Villa",logo:"https://upload.wikimedia.org/wikipedia/en/9/9f/Aston_Villa_FC_crest_%282016%29.svg"},
+      {name:"West Ham United",logo:"https://upload.wikimedia.org/wikipedia/en/c/c2/West_Ham_United_FC_logo.svg"},
+      {name:"Brighton",logo:"https://upload.wikimedia.org/wikipedia/en/f/fd/Brighton_%26_Hove_Albion_FC.svg"},
+      {name:"Everton",logo:"https://upload.wikimedia.org/wikipedia/en/7/7c/Everton_FC_logo.svg"},
+      {name:"Wolverhampton",logo:"https://upload.wikimedia.org/wikipedia/en/f/fc/Wolverhampton_Wanderers.svg"},
+      {name:"Fulham",logo:"https://upload.wikimedia.org/wikipedia/en/e/eb/Fulham_FC_%28shield%29.svg"},
+      {name:"Crystal Palace",logo:"https://upload.wikimedia.org/wikipedia/en/a/a2/Crystal_Palace_FC_logo_%282022%29.svg"},
+      {name:"Brentford",logo:"https://upload.wikimedia.org/wikipedia/en/2/2a/Brentford_FC_crest.svg"},
+      {name:"Nottingham Forest",logo:"https://upload.wikimedia.org/wikipedia/en/e/e5/Nottingham_Forest_F.C._logo.svg"},
+      {name:"Bournemouth",logo:"https://upload.wikimedia.org/wikipedia/en/e/e5/AFC_Bournemouth_%282013%29.svg"},
+      {name:"Leicester City",logo:"https://upload.wikimedia.org/wikipedia/en/2/2d/Leicester_City_crest.svg"},
+      {name:"Ipswich Town",logo:"https://upload.wikimedia.org/wikipedia/en/4/43/Ipswich_Town.svg"},
+      {name:"Southampton",logo:"https://upload.wikimedia.org/wikipedia/en/c/c9/FC_Southampton.svg"},
+    ]
+  },
+  "English Championship": {
+    country:"England", continent:"Europe", flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿", type:"domestic",
+    teams:[
+      {name:"Leeds United",logo:"https://upload.wikimedia.org/wikipedia/en/5/54/Leeds_United_F.C._logo.svg"},
+      {name:"Sunderland",logo:"https://upload.wikimedia.org/wikipedia/en/7/77/Logo_Sunderland.svg"},
+      {name:"Sheffield United",logo:"https://upload.wikimedia.org/wikipedia/en/9/9c/Sheffield_United_FC_logo.svg"},
+      {name:"Middlesbrough",logo:"https://upload.wikimedia.org/wikipedia/en/7/7b/Middlesbrough_FC_crest.svg"},
+      {name:"Millwall",logo:"https://upload.wikimedia.org/wikipedia/en/0/0c/Millwall_FC_logo.svg"},
+      {name:"Coventry City",logo:"https://upload.wikimedia.org/wikipedia/en/0/02/Coventry_City_FC_badge.svg"},
+      {name:"Queens Park Rangers",logo:"https://upload.wikimedia.org/wikipedia/en/3/31/Queens_Park_Rangers_crest.svg"},
+      {name:"Bristol City",logo:"https://upload.wikimedia.org/wikipedia/en/f/f5/Bristol_City_FC.svg"},
+      {name:"Norwich City",logo:"https://upload.wikimedia.org/wikipedia/en/8/8c/Norwich_City.svg"},
+      {name:"Hull City",logo:"https://upload.wikimedia.org/wikipedia/en/5/54/Hull_City_A.F.C._logo.svg"},
+      {name:"Swansea City",logo:"https://upload.wikimedia.org/wikipedia/en/f/f9/Swansea_City_AFC_logo.svg"},
+      {name:"Blackburn Rovers",logo:"https://upload.wikimedia.org/wikipedia/en/0/0f/Blackburn_Rovers.svg"},
+      {name:"Burnley",logo:"https://upload.wikimedia.org/wikipedia/en/0/02/Burnley_FC_logo.svg"},
+      {name:"Preston North End",logo:"https://upload.wikimedia.org/wikipedia/en/8/82/Preston_North_End_FC.svg"},
+      {name:"West Bromwich Albion",logo:"https://upload.wikimedia.org/wikipedia/en/8/8b/West_Bromwich_Albion.svg"},
+      {name:"Derby County",logo:"https://upload.wikimedia.org/wikipedia/en/4/47/Derby_County_FC.svg"},
+      {name:"Watford",logo:"https://upload.wikimedia.org/wikipedia/en/e/e2/Watford.svg"},
+      {name:"Oxford United",logo:"https://upload.wikimedia.org/wikipedia/en/a/af/Oxford_United_FC_crest.svg"},
+      {name:"Plymouth Argyle",logo:"https://upload.wikimedia.org/wikipedia/en/a/a5/Plymouth_Argyle_FC.svg"},
+      {name:"Cardiff City",logo:"https://upload.wikimedia.org/wikipedia/en/3/3c/Cardiff_City_Badge.svg"},
+    ]
+  },
+  "English League One": {country:"England",continent:"Europe",flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",type:"domestic",teams:[{name:"Huddersfield Town"},{name:"Birmingham City"},{name:"Charlton Athletic"},{name:"Peterborough United"},{name:"Reading"},{name:"Stockport County"},{name:"Wrexham"},{name:"Wycombe Wanderers"},{name:"Stevenage"},{name:"Wigan Athletic"},{name:"Exeter City"},{name:"Rotherham United"},{name:"Barnsley"},{name:"Northampton Town"},{name:"Lincoln City"},{name:"Cambridge United"},{name:"Burton Albion"},{name:"Shrewsbury Town"},{name:"Leyton Orient"},{name:"Blackpool"}]},
+  "English League Two": {country:"England",continent:"Europe",flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",type:"domestic",teams:[{name:"Doncaster Rovers"},{name:"Grimsby Town"},{name:"Chesterfield"},{name:"Notts County"},{name:"Bradford City"},{name:"Fleetwood Town"},{name:"AFC Wimbledon"},{name:"Colchester United"},{name:"Cheltenham Town"},{name:"Crewe Alexandra"},{name:"Port Vale"},{name:"Swindon Town"},{name:"Crawley Town"},{name:"Harrogate Town"},{name:"Newport County"},{name:"Gillingham"},{name:"Mansfield Town"},{name:"Accrington Stanley"},{name:"Salford City"},{name:"Tranmere Rovers"}]},
+  "English National League": {country:"England",continent:"Europe",flag:"🏴󠁧󠁢󠁥󠁮󠁧󠁿",type:"domestic",teams:[{name:"Chesterfield"},{name:"Bromley"},{name:"Solihull Moors"},{name:"Boreham Wood"},{name:"FC Halifax Town"},{name:"Altrincham"},{name:"Eastleigh"},{name:"Gateshead"},{name:"Wealdstone"},{name:"Oldham Athletic"},{name:"Woking"},{name:"Dorking Wanderers"},{name:"Yeovil Town"},{name:"Bath City"},{name:"Hartlepool United"},{name:"Maidenhead United"},{name:"Southend United"},{name:"Torquay United"},{name:"Aldershot Town"},{name:"Dagenham & Redbridge"}]},
+
+  // ---- SPAIN ----
+  "La Liga": {country:"Spain",continent:"Europe",flag:"🇪🇸",type:"domestic",teams:[{name:"Real Madrid",logo:"https://upload.wikimedia.org/wikipedia/en/5/56/Real_Madrid_CF.svg"},{name:"Barcelona",logo:"https://upload.wikimedia.org/wikipedia/en/4/47/FC_Barcelona_%28crest%29.svg"},{name:"Atletico Madrid",logo:"https://upload.wikimedia.org/wikipedia/en/f/f4/Atletico_Madrid_2017_logo.svg"},{name:"Sevilla",logo:"https://upload.wikimedia.org/wikipedia/en/3/3b/Sevilla_FC_logo.svg"},{name:"Real Betis",logo:"https://upload.wikimedia.org/wikipedia/en/4/42/Real_betis_logo.svg"},{name:"Valencia",logo:"https://upload.wikimedia.org/wikipedia/en/c/ce/Valenciacf.svg"},{name:"Athletic Bilbao",logo:"https://upload.wikimedia.org/wikipedia/en/9/98/Club_Athletic_de_Bilbao_logo.svg"},{name:"Real Sociedad",logo:"https://upload.wikimedia.org/wikipedia/en/f/f1/Real_Sociedad_logo.svg"},{name:"Villarreal",logo:"https://upload.wikimedia.org/wikipedia/en/b/b9/Villarreal_CF_logo-en.svg"},{name:"Osasuna",logo:""},{name:"Celta Vigo",logo:""},{name:"Getafe",logo:""},{name:"Rayo Vallecano",logo:""},{name:"Girona",logo:""},{name:"Mallorca",logo:""},{name:"Las Palmas",logo:""},{name:"Alaves",logo:""},{name:"Leganes",logo:""},{name:"Espanyol",logo:""},{name:"Valladolid",logo:""}]},
+  "Segunda Division": {country:"Spain",continent:"Europe",flag:"🇪🇸",type:"domestic",teams:[{name:"Racing Santander"},{name:"Racing Ferrol"},{name:"Sporting Gijon"},{name:"Real Oviedo"},{name:"SD Eibar"},{name:"Mirandes"},{name:"Eldense"},{name:"Ferrol"},{name:"SD Huesca"},{name:"Real Zaragoza"},{name:"Levante"},{name:"Almeria"},{name:"Cadiz"},{name:"Granada"},{name:"Elche"},{name:"Castellon"},{name:"Burgos"},{name:"Cordoba"},{name:"Cartagena"},{name:"CD Tenerife"}]},
+  "Spanish Segunda B": {country:"Spain",continent:"Europe",flag:"🇪🇸",type:"domestic",teams:[{name:"Deportivo de La Coruña"},{name:"Pontevedra"},{name:"SD Compostela"},{name:"Cultural Leonesa"},{name:"Real Union"},{name:"Sestao River"},{name:"Barakaldo"},{name:"Arenas Club"},{name:"Alcoyano"},{name:"Hercules"},{name:"Villarreal B"},{name:"Valencia B"},{name:"Barcelona B"},{name:"Real Madrid Castilla"},{name:"Atletico Madrid B"},{name:"Betis Deportivo"},{name:"Malaga"},{name:"Linares Deportivo"},{name:"Atletico Sanluqueno"},{name:"Marbella"}]},
+  "Copa del Rey": {country:"Spain",continent:"Europe",flag:"🇪🇸",type:"cup",teams:[]},
+  "Supercopa de España": {country:"Spain",continent:"Europe",flag:"🇪🇸",type:"cup",teams:[]},
+
+  // ---- GERMANY ----
+  "Bundesliga": {country:"Germany",continent:"Europe",flag:"🇩🇪",type:"domestic",teams:[{name:"Bayern Munich",logo:"https://upload.wikimedia.org/wikipedia/commons/1/1b/FC_Bayern_M%C3%BCnchen_logo_%282002%E2%80%932017%29.svg"},{name:"Borussia Dortmund",logo:"https://upload.wikimedia.org/wikipedia/commons/6/67/Borussia_Dortmund_logo.svg"},{name:"Bayer Leverkusen",logo:"https://upload.wikimedia.org/wikipedia/en/5/59/Bayer_04_Leverkusen_logo.svg"},{name:"RB Leipzig",logo:"https://upload.wikimedia.org/wikipedia/en/0/04/RB_Leipzig_2014_logo.svg"},{name:"Eintracht Frankfurt",logo:"https://upload.wikimedia.org/wikipedia/commons/0/04/Eintracht_Frankfurt_Logo.svg"},{name:"Borussia Mönchengladbach",logo:""},{name:"VfB Stuttgart",logo:""},{name:"Wolfsburg",logo:""},{name:"Union Berlin",logo:""},{name:"Freiburg",logo:""},{name:"Hoffenheim",logo:""},{name:"Mainz 05",logo:""},{name:"Augsburg",logo:""},{name:"Werder Bremen",logo:""},{name:"Heidenheim",logo:""},{name:"Bochum",logo:""},{name:"Holstein Kiel",logo:""},{name:"St. Pauli",logo:""}]},
+  "2. Bundesliga": {country:"Germany",continent:"Europe",flag:"🇩🇪",type:"domestic",teams:[{name:"Hamburger SV"},{name:"Hannover 96"},{name:"Fortuna Düsseldorf"},{name:"1. FC Köln"},{name:"FC Nürnberg"},{name:"Hertha Berlin"},{name:"Kaiserslautern"},{name:"Schalke 04"},{name:"Greuther Fürth"},{name:"Paderborn"},{name:"Magdeburg"},{name:"Elversberg"},{name:"Karlsruhe"},{name:"Darmstadt"},{name:"Braunschweig"},{name:"Ulm"},{name:"Regensburg"},{name:"Preußen Münster"}]},
+  "3. Liga": {country:"Germany",continent:"Europe",flag:"🇩🇪",type:"domestic",teams:[{name:"VfL Osnabrück"},{name:"Waldhof Mannheim"},{name:"1. FC Saarbrücken"},{name:"SV Sandhausen"},{name:"TSV 1860 München"},{name:"Dynamo Dresden"},{name:"Wehen Wiesbaden"},{name:"Erzgebirge Aue"},{name:"FC Ingolstadt"},{name:"Energie Cottbus"},{name:"SpVgg Unterhaching"},{name:"Rot-Weiss Essen"},{name:"VfB Lübeck"},{name:"Hansa Rostock"},{name:"Arminia Bielefeld"},{name:"SC Freiburg II"},{name:"Bayern Munich II"},{name:"Borussia Dortmund II"}]},
+  "DFB Pokal": {country:"Germany",continent:"Europe",flag:"🇩🇪",type:"cup",teams:[]},
+  "Regionalliga": {country:"Germany",continent:"Europe",flag:"🇩🇪",type:"domestic",teams:[{name:"Wuppertaler SV"},{name:"SV Rödinghausen"},{name:"SV Lippstadt"},{name:"FC Gütersloh"},{name:"Sportfreunde Lotte"},{name:"TuS Haltern"},{name:"Germania Windeck"},{name:"RW Ahlen"},{name:"BW Lohne"},{name:"FC Eintracht Rheine"},{name:"TuS Bövinghausen"},{name:"SC Paderborn II"},{name:"Westfalia Rhynern"},{name:"BSV Schwarz-Weiß Rehden"},{name:"SV Straelen"}]},
+
+  // ---- ITALY ----
+  "Serie A": {country:"Italy",continent:"Europe",flag:"🇮🇹",type:"domestic",teams:[{name:"Inter Milan",logo:"https://upload.wikimedia.org/wikipedia/commons/0/05/FC_Internazionale_Milano_2021.svg"},{name:"Juventus",logo:"https://upload.wikimedia.org/wikipedia/commons/b/bc/Juventus_FC_2017_icon_%28black%29.svg"},{name:"AC Milan",logo:"https://upload.wikimedia.org/wikipedia/commons/d/d0/Logo_of_AC_Milan.svg"},{name:"Napoli",logo:"https://upload.wikimedia.org/wikipedia/commons/2/2d/SSC_Neapel.svg"},{name:"Roma",logo:"https://upload.wikimedia.org/wikipedia/en/f/f7/AS_Roma_logo_%282017%29.svg"},{name:"Lazio",logo:"https://upload.wikimedia.org/wikipedia/en/7/71/SS_Lazio_Badge.svg"},{name:"Atalanta",logo:"https://upload.wikimedia.org/wikipedia/en/6/66/AtalantaBC.svg"},{name:"Fiorentina",logo:"https://upload.wikimedia.org/wikipedia/commons/f/f2/2022_ACF_Fiorentina_logo.svg"},{name:"Torino",logo:""},{name:"Bologna",logo:""},{name:"Udinese",logo:""},{name:"Genoa",logo:""},{name:"Cagliari",logo:""},{name:"Hellas Verona",logo:""},{name:"Monza",logo:""},{name:"Parma",logo:""},{name:"Como",logo:""},{name:"Lecce",logo:""},{name:"Venezia",logo:""},{name:"Empoli",logo:""}]},
+  "Serie B": {country:"Italy",continent:"Europe",flag:"🇮🇹",type:"domestic",teams:[{name:"Sassuolo"},{name:"Palermo"},{name:"Sampdoria"},{name:"Catanzaro"},{name:"Spezia"},{name:"Frosinone"},{name:"Brescia"},{name:"Bari"},{name:"Cosenza"},{name:"Modena"},{name:"Cesena"},{name:"Mantova"},{name:"Cremonese"},{name:"Sudtirol"},{name:"Pisa"},{name:"Salernitana"},{name:"Reggiana"},{name:"Carrarese"},{name:"Cittadella"},{name:"Juve Stabia"}]},
+  "Serie C": {country:"Italy",continent:"Europe",flag:"🇮🇹",type:"domestic",teams:[{name:"Padova"},{name:"Vicenza"},{name:"Novara"},{name:"Pro Vercelli"},{name:"Crotone"},{name:"Foggia"},{name:"Avellino"},{name:"Latina"},{name:"Messina"},{name:"Catania"},{name:"Trapani"},{name:"Torres"},{name:"Taranto"},{name:"Benevento"},{name:"Cerignola"},{name:"Juventus Next Gen"}]},
+  "Coppa Italia": {country:"Italy",continent:"Europe",flag:"🇮🇹",type:"cup",teams:[]},
+  "Serie D": {country:"Italy",continent:"Europe",flag:"🇮🇹",type:"domestic",teams:[{name:"Giana Erminio"},{name:"Virtus Entella"},{name:"Piacenza"},{name:"Triestina"},{name:"Pro Patria"},{name:"Renate"},{name:"Pordenone"},{name:"Trento"},{name:"Caldiero Terme"},{name:"San Donato Tavarnelle"}]},
+
+  // ---- FRANCE ----
+  "Ligue 1": {country:"France",continent:"Europe",flag:"🇫🇷",type:"domestic",teams:[{name:"PSG",logo:"https://upload.wikimedia.org/wikipedia/en/a/a7/Paris_Saint-Germain_F.C..svg"},{name:"Monaco",logo:"https://upload.wikimedia.org/wikipedia/en/e/ea/AS_Monaco_FC.svg"},{name:"Marseille",logo:"https://upload.wikimedia.org/wikipedia/commons/d/d8/Olympique_Marseille_logo.svg"},{name:"Lyon",logo:"https://upload.wikimedia.org/wikipedia/en/e/e2/Olympique_Lyonnais_%28emblem%29.svg"},{name:"Lens",logo:""},{name:"Nice",logo:""},{name:"Rennes",logo:""},{name:"Lille",logo:"https://upload.wikimedia.org/wikipedia/en/b/ba/LOSC_Lille_2011_logo.svg"},{name:"Strasbourg",logo:""},{name:"Montpellier",logo:""},{name:"Nantes",logo:""},{name:"Reims",logo:""},{name:"Brest",logo:""},{name:"Le Havre",logo:""},{name:"Toulouse",logo:""},{name:"Auxerre",logo:""},{name:"Angers",logo:""},{name:"Saint-Etienne",logo:""}]},
+  "Ligue 2": {country:"France",continent:"Europe",flag:"🇫🇷",type:"domestic",teams:[{name:"Grenoble"},{name:"Bastia"},{name:"Guingamp"},{name:"Valenciennes"},{name:"Concarneau"},{name:"Quevilly-Rouen"},{name:"Rodez"},{name:"Laval"},{name:"Troyes"},{name:"Amiens"},{name:"Bordeaux"},{name:"Caen"},{name:"Clermont"},{name:"Dunkerque"},{name:"Metz"},{name:"PAU FC"},{name:"Martigues"},{name:"Ajaccio"}]},
+  "National": {country:"France",continent:"Europe",flag:"🇫🇷",type:"domestic",teams:[{name:"Red Star FC"},{name:"Marignane"},{name:"Villefranche"},{name:"Hyères"},{name:"Béziers"},{name:"Bergerac"},{name:"Cholet"},{name:"Stade Briochin"},{name:"Fontenay"},{name:"Aurillac"},{name:"Rumilly-Vallières"},{name:"Avranches"},{name:"AS Poissy"},{name:"Fleury 91"},{name:"Nîmes"},{name:"Sedan"}]},
+  "Coupe de France": {country:"France",continent:"Europe",flag:"🇫🇷",type:"cup",teams:[]},
+  "Champions Trophy": {country:"France",continent:"Europe",flag:"🇫🇷",type:"cup",teams:[]},
+
+  // ---- PORTUGAL ----
+  "Primeira Liga": {country:"Portugal",continent:"Europe",flag:"🇵🇹",type:"domestic",teams:[{name:"Benfica",logo:"https://upload.wikimedia.org/wikipedia/en/a/a2/SL_Benfica_logo.svg"},{name:"Porto",logo:"https://upload.wikimedia.org/wikipedia/en/3/3e/FC_Porto.svg"},{name:"Sporting CP",logo:"https://upload.wikimedia.org/wikipedia/en/f/f8/Sporting_CP_%E2%80%93_Badge_%28black%29.svg"},{name:"Braga",logo:""},{name:"Vitoria de Guimaraes",logo:""},{name:"Famalicao",logo:""},{name:"Rio Ave",logo:""},{name:"Boavista",logo:""},{name:"Estoril Praia",logo:""},{name:"Moreirense",logo:""},{name:"Casa Pia",logo:""},{name:"Farense",logo:""},{name:"Estrela da Amadora",logo:""},{name:"AVS",logo:""},{name:"Gil Vicente",logo:""},{name:"Santa Clara",logo:""},{name:"Arouca",logo:""},{name:"Nacional",logo:""}]},
+  "Liga Portugal 2": {country:"Portugal",continent:"Europe",flag:"🇵🇹",type:"domestic",teams:[{name:"Leixoes"},{name:"Penafiel"},{name:"Chaves"},{name:"Desportivo Chaves"},{name:"Covilha"},{name:"Academica"},{name:"Tondela"},{name:"Vizela"},{name:"Pacos de Ferreira"},{name:"Mafra"},{name:"Setubal"},{name:"Belenenses SAD"},{name:"Varzim"},{name:"UD Oliveirense"},{name:"Feirense"},{name:"AC Marinhense"},{name:"Alverca"},{name:"Amarante"}]},
+  "Liga 3": {country:"Portugal",continent:"Europe",flag:"🇵🇹",type:"domestic",teams:[{name:"FC Porto B"},{name:"Benfica B"},{name:"Sporting B"},{name:"Academico Viseu"},{name:"FC Felgueiras"},{name:"Lusitano Evora"},{name:"Maritimo B"},{name:"Trofense"},{name:"Tourizense"},{name:"Canelas 2010"},{name:"FC Pedras Rubras"},{name:"Leça"},{name:"AD Sanjoanense"},{name:"Castrense"},{name:"Vilaverdense"},{name:"Anadia"}]},
+  "Taça de Portugal": {country:"Portugal",continent:"Europe",flag:"🇵🇹",type:"cup",teams:[]},
+  "Taça da Liga": {country:"Portugal",continent:"Europe",flag:"🇵🇹",type:"cup",teams:[]},
+
+  // ---- NETHERLANDS ----
+  "Eredivisie": {country:"Netherlands",continent:"Europe",flag:"🇳🇱",type:"domestic",teams:[{name:"Ajax",logo:"https://upload.wikimedia.org/wikipedia/en/7/79/Ajax_Amsterdam.svg"},{name:"PSV Eindhoven",logo:"https://upload.wikimedia.org/wikipedia/en/0/05/PSV_Eindhoven.svg"},{name:"Feyenoord",logo:"https://upload.wikimedia.org/wikipedia/en/f/f1/Feyenoord.svg"},{name:"AZ Alkmaar",logo:""},{name:"FC Utrecht",logo:""},{name:"FC Twente",logo:""},{name:"Vitesse",logo:""},{name:"Heracles",logo:""},{name:"NEC Nijmegen",logo:""},{name:"Heerenveen",logo:""},{name:"Sparta Rotterdam",logo:""},{name:"Go Ahead Eagles",logo:""},{name:"RKC Waalwijk",logo:""},{name:"FC Groningen",logo:""},{name:"Almere City",logo:""},{name:"PEC Zwolle",logo:""},{name:"NAC Breda",logo:""},{name:"Willem II",logo:""}]},
+  "Eerste Divisie": {country:"Netherlands",continent:"Europe",flag:"🇳🇱",type:"domestic",teams:[{name:"Roda JC"},{name:"FC Eindhoven"},{name:"FC Den Bosch"},{name:"Helmond Sport"},{name:"FC Dordrecht"},{name:"MVV Maastricht"},{name:"De Graafschap"},{name:"Jong PSV"},{name:"Jong Ajax"},{name:"ADO Den Haag"},{name:"FC Volendam"},{name:"Jong AZ"},{name:"Excelsior"},{name:"TOP Oss"},{name:"FC Emmen"},{name:"Jong Utrecht"}]},
+  "Tweede Divisie": {country:"Netherlands",continent:"Europe",flag:"🇳🇱",type:"domestic",teams:[{name:"VVSB"},{name:"Katwijk"},{name:"Spakenburg"},{name:"HHC Hardenberg"},{name:"SC Genemuiden"},{name:"Quick Boys"},{name:"AFC Amsterdam"},{name:"Koninklijke HFC"},{name:"VV Gemert"}]},
+  "KNVB Cup": {country:"Netherlands",continent:"Europe",flag:"🇳🇱",type:"cup",teams:[]},
+  "Keuken Kampioen Divisie": {country:"Netherlands",continent:"Europe",flag:"🇳🇱",type:"domestic",teams:[{name:"Almere City B"},{name:"FC Oss"},{name:"Telstar"},{name:"Jong Feyenoord"},{name:"Jong Vitesse"},{name:"Cambuur"},{name:"RBC Roosendaal"}]},
+
+  // ---- KENYA ----
+  "FKF Premier League": {country:"Kenya",continent:"Africa",flag:"🇰🇪",type:"domestic",teams:[{name:"Gor Mahia",logo:"https://upload.wikimedia.org/wikipedia/en/d/d5/Gor_Mahia_FC_logo.svg"},{name:"AFC Leopards",logo:"https://upload.wikimedia.org/wikipedia/en/2/22/AFC_Leopards_crest.svg"},{name:"Tusker FC",logo:""},{name:"Kakamega Homeboyz",logo:""},{name:"Nzoia Sugar",logo:""},{name:"KCB FC",logo:""},{name:"Posta Rangers",logo:""},{name:"Sofapaka",logo:""},{name:"Wazito FC",logo:""},{name:"Bandari FC",logo:""},{name:"Ulinzi Stars",logo:""},{name:"Mathare United",logo:""},{name:"Kariobangi Sharks",logo:""},{name:"Muranga Seal",logo:""},{name:"Nairobi City Stars",logo:""},{name:"FC Talanta",logo:""},{name:"Kenya Police FC",logo:""},{name:"Shabana FC",logo:""}]},
+  "FKF National Super League": {country:"Kenya",continent:"Africa",flag:"🇰🇪",type:"domestic",teams:[{name:"Western Stima"},{name:"Nairobi Stima"},{name:"Murang'a Seal"},{name:"Real Fighters"},{name:"FC Kibera"},{name:"Green Commandos"},{name:"Coastal Heroes"},{name:"St. Joseph's Youth"},{name:"Mount Kenya FC"},{name:"Thika United"},{name:"Mombasa Sports Club"},{name:"APS Bomet"},{name:"Vihiga United"},{name:"Bungoma County FC"},{name:"Migori Youth"},{name:"Kisumu Posta"},{name:"Rift Valley Stars"},{name:"Matasi FC"}]},
+  "FKF Division One": {country:"Kenya",continent:"Africa",flag:"🇰🇪",type:"domestic",teams:[{name:"Jamhuri FC"},{name:"Pipeline FC"},{name:"Administration Police"},{name:"Rangers FC"},{name:"Prisons FC"},{name:"Equity Bank FC"},{name:"Bidco United"},{name:"Kibera Black Stars"},{name:"Zimmerman FC"},{name:"Githurai Stars"},{name:"Coast Stima"},{name:"Nakuru All Stars"},{name:"Kisii United"}]},
+  "FKF Cup": {country:"Kenya",continent:"Africa",flag:"🇰🇪",type:"cup",teams:[]},
+  "Kenyan Super Cup": {country:"Kenya",continent:"Africa",flag:"🇰🇪",type:"cup",teams:[]},
+
+  // ---- NIGERIA ----
+  "NPFL": {country:"Nigeria",continent:"Africa",flag:"🇳🇬",type:"domestic",teams:[{name:"Enyimba",logo:""},{name:"Rangers International",logo:""},{name:"Akwa United",logo:""},{name:"Kano Pillars",logo:""},{name:"Plateau United",logo:""},{name:"Rivers United",logo:""},{name:"Lobi Stars",logo:""},{name:"Heartland FC",logo:""},{name:"Sunshine Stars",logo:""},{name:"Nassarawa United",logo:""},{name:"Kwara United",logo:""},{name:"Katsina United",logo:""},{name:"Abia Warriors",logo:""},{name:"Wikki Tourists",logo:""},{name:"Doma United",logo:""},{name:"Remo Stars",logo:""},{name:"FC IfeanyiUbah",logo:""},{name:"GO Round FC",logo:""}]},
+  "Nigeria National League": {country:"Nigeria",continent:"Africa",flag:"🇳🇬",type:"domestic",teams:[{name:"Abia Comets"},{name:"Adamawa United"},{name:"Giants of Africa"},{name:"First Bank FC"},{name:"Suleja United"},{name:"Bayelsa United"},{name:"Crown FC"},{name:"Niger Tornadoes"},{name:"Adamawa United"},{name:"Cross River United"},{name:"Oyo United"},{name:"Sporting Lagos"}]},
+  "Federation Cup Nigeria": {country:"Nigeria",continent:"Africa",flag:"🇳🇬",type:"cup",teams:[]},
+  "Nigeria U-20 League": {country:"Nigeria",continent:"Africa",flag:"🇳🇬",type:"domestic",teams:[{name:"Enyimba Academy"},{name:"Kano Pillars Academy"},{name:"Shooting Stars Academy"},{name:"Sunshine Stars Academy"}]},
+  "NPFL Super 6": {country:"Nigeria",continent:"Africa",flag:"🇳🇬",type:"cup",teams:[]},
+
+  // ---- SOUTH AFRICA ----
+  "DStv Premiership": {country:"South Africa",continent:"Africa",flag:"🇿🇦",type:"domestic",teams:[{name:"Mamelodi Sundowns",logo:""},{name:"Orlando Pirates",logo:""},{name:"Kaizer Chiefs",logo:""},{name:"Cape Town City",logo:""},{name:"Stellenbosch FC",logo:""},{name:"Supersport United",logo:""},{name:"AmaZulu FC",logo:""},{name:"TS Galaxy",logo:""},{name:"Polokwane City",logo:""},{name:"Golden Arrows",logo:""},{name:"Royal AM",logo:""},{name:"Sekhukhune United",logo:""},{name:"Chippa United",logo:""},{name:"Swallows FC",logo:""},{name:"Moroka Swallows",logo:""},{name:"Magesi FC",logo:""}]},
+  "GladAfrica Championship": {country:"South Africa",continent:"Africa",flag:"🇿🇦",type:"domestic",teams:[{name:"Pretoria Callies"},{name:"University of Pretoria"},{name:"Hungry Lions"},{name:"Ubuntu Cape Town"},{name:"Richards Bay"},{name:"Cape Town All Stars"},{name:"Black Leopards"},{name:"Tshakhuma Tsha Madzivhandila"},{name:"JDR Stars"},{name:"Platinum City Rovers"}]},
+  "ABC Motsepe League": {country:"South Africa",continent:"Africa",flag:"🇿🇦",type:"domestic",teams:[{name:"Venda Football Academy"},{name:"Great North FC"},{name:"Tornado FC"},{name:"Mamelodi Sundowns Academy"},{name:"Cape Town Spurs"},{name:"Spurs FC"}]},
+  "Nedbank Cup": {country:"South Africa",continent:"Africa",flag:"🇿🇦",type:"cup",teams:[]},
+  "MTN8": {country:"South Africa",continent:"Africa",flag:"🇿🇦",type:"cup",teams:[]},
+
+  // ---- EGYPT ----
+  "Egyptian Premier League": {country:"Egypt",continent:"Africa",flag:"🇪🇬",type:"domestic",teams:[{name:"Al Ahly",logo:""},{name:"Zamalek",logo:""},{name:"Pyramids FC",logo:""},{name:"Ismaily",logo:""},{name:"El Gaish",logo:""},{name:"Ceramica Cleopatra",logo:""},{name:"ENPPI",logo:""},{name:"Ittihad Alexandria",logo:""},{name:"Haras El-Hodood",logo:""},{name:"Ghazl El-Mahallah",logo:""},{name:"National Bank",logo:""},{name:"Farco",logo:""},{name:"Misr Lel Makkasa",logo:""},{name:"Future FC",logo:""}]},
+  "Egyptian Second Division": {country:"Egypt",continent:"Africa",flag:"🇪🇬",type:"domestic",teams:[{name:"Tala'ea El-Gaish"},{name:"El Sharkia"},{name:"Olympique Assiout"},{name:"Aswan SC"},{name:"Telephones FC"},{name:"Olympic Club"},{name:"Petrojet"}]},
+  "Egyptian Cup": {country:"Egypt",continent:"Africa",flag:"🇪🇬",type:"cup",teams:[]},
+  "Egyptian Super Cup": {country:"Egypt",continent:"Africa",flag:"🇪🇬",type:"cup",teams:[]},
+  "Egypt Division 3": {country:"Egypt",continent:"Africa",flag:"🇪🇬",type:"domestic",teams:[{name:"Alexandria FC"},{name:"Menoufia"},{name:"Dakahlia"},{name:"Fayoum SC"}]},
+
+  // ---- GHANA ----
+  "Ghana Premier League": {country:"Ghana",continent:"Africa",flag:"🇬🇭",type:"domestic",teams:[{name:"Asante Kotoko",logo:""},{name:"Hearts of Oak",logo:""},{name:"Medeama SC",logo:""},{name:"Aduana Stars",logo:""},{name:"Berekum Chelsea",logo:""},{name:"Ashantigold",logo:""},{name:"King Faisal",logo:""},{name:"Dreams FC",logo:""},{name:"Legon Cities",logo:""},{name:"Real Tamale United",logo:""},{name:"Nations FC",logo:""},{name:"Bofoakwa Tano",logo:""},{name:"Bechem United",logo:""}]},
+  "Ghana Division One": {country:"Ghana",continent:"Africa",flag:"🇬🇭",type:"domestic",teams:[{name:"Accra Lions"},{name:"Nzema Kotoko"},{name:"Skyy FC"},{name:"Tamale City"},{name:"Wa All Stars"},{name:"Proud United"},{name:"Sekondi Hasaacas"},{name:"Sporting Mirren"}]},
+  "Ghana Division Two": {country:"Ghana",continent:"Africa",flag:"🇬🇭",type:"domestic",teams:[{name:"Saddick Adams FC"},{name:"Sefwi Wiawso"},{name:"Dormaa United"}]},
+  "MTN FA Cup Ghana": {country:"Ghana",continent:"Africa",flag:"🇬🇭",type:"cup",teams:[]},
+  "GHALCA Cup": {country:"Ghana",continent:"Africa",flag:"🇬🇭",type:"cup",teams:[]},
+
+  // ---- BRAZIL ----
+  "Brasileirão Serie A": {country:"Brazil",continent:"South America",flag:"🇧🇷",type:"domestic",teams:[{name:"Flamengo",logo:"https://upload.wikimedia.org/wikipedia/commons/2/2e/Flamengo_braz_logo.svg"},{name:"Palmeiras",logo:"https://upload.wikimedia.org/wikipedia/commons/f/fc/Palmeiras_logo.svg"},{name:"Atletico Mineiro",logo:""},{name:"Fluminense",logo:""},{name:"Gremio",logo:""},{name:"Internacional",logo:""},{name:"Corinthians",logo:""},{name:"Santos",logo:""},{name:"Sao Paulo",logo:""},{name:"Vasco da Gama",logo:""},{name:"Botafogo",logo:""},{name:"Cruzeiro",logo:""},{name:"Bahia",logo:""},{name:"Atletico Goianiense",logo:""},{name:"Fortaleza",logo:""},{name:"RB Bragantino",logo:""},{name:"Athletico Paranaense",logo:""},{name:"Mirassol",logo:""},{name:"Ceará",logo:""},{name:"Juventude",logo:""}]},
+  "Brasileirão Serie B": {country:"Brazil",continent:"South America",flag:"🇧🇷",type:"domestic",teams:[{name:"Sport Recife"},{name:"Goiás"},{name:"Santos B"},{name:"Operário"},{name:"Novorizontino"},{name:"Vila Nova"},{name:"Ituano"},{name:"Paysandu"},{name:"Coritiba"},{name:"CRB"},{name:"Ponte Preta"},{name:"América Mineiro"},{name:"Chapecoense"},{name:"Guarani"}]},
+  "Copa do Brasil": {country:"Brazil",continent:"South America",flag:"🇧🇷",type:"cup",teams:[]},
+  "Campeonato Carioca": {country:"Brazil",continent:"South America",flag:"🇧🇷",type:"domestic",teams:[{name:"Flamengo B"},{name:"Fluminense B"},{name:"Vasco da Gama B"},{name:"Botafogo B"},{name:"Bangu"},{name:"Resende"},{name:"Madureira"},{name:"Campo Grande"},{name:"Portuguesa-RJ"},{name:"Boavista"}]},
+  "Campeonato Paulista": {country:"Brazil",continent:"South America",flag:"🇧🇷",type:"domestic",teams:[{name:"Corinthians B"},{name:"Palmeiras B"},{name:"São Paulo B"},{name:"Santos B"},{name:"Ferroviária"},{name:"Água Santa"},{name:"Mirassol"},{name:"Guarani B"},{name:"Red Bull Bragantino B"},{name:"Ituano B"}]},
+
+  // ---- ARGENTINA ----
+  "Liga Profesional": {country:"Argentina",continent:"South America",flag:"🇦🇷",type:"domestic",teams:[{name:"Boca Juniors",logo:"https://upload.wikimedia.org/wikipedia/commons/f/f3/Escudo_del_Club_Atl%C3%A9tico_Boca_Juniors.svg"},{name:"River Plate",logo:"https://upload.wikimedia.org/wikipedia/commons/a/a8/Escudo_del_Club_Atlético_River_Plate.svg"},{name:"Racing Club",logo:""},{name:"Independiente",logo:""},{name:"San Lorenzo",logo:""},{name:"Huracán",logo:""},{name:"Vélez Sársfield",logo:""},{name:"Estudiantes",logo:""},{name:"Rosario Central",logo:""},{name:"Newell's Old Boys",logo:""},{name:"Talleres",logo:""},{name:"Atletico Tucuman",logo:""},{name:"Lanús",logo:""},{name:"Banfield",logo:""},{name:"Platense",logo:""},{name:"Godoy Cruz",logo:""},{name:"Tigre",logo:""},{name:"Instituto",logo:""}]},
+  "Primera Nacional": {country:"Argentina",continent:"South America",flag:"🇦🇷",type:"domestic",teams:[{name:"All Boys"},{name:"Chacarita Juniors"},{name:"Quilmes"},{name:"Brown de Adrogué"},{name:"Almirante Brown"},{name:"Ferro Carril Oeste"},{name:"Barracas Central"},{name:"Nueva Chicago"},{name:"San Telmo"},{name:"Atlanta"},{name:"Deportivo Riestra"},{name:"Comunicaciones"}]},
+  "Copa Argentina": {country:"Argentina",continent:"South America",flag:"🇦🇷",type:"cup",teams:[]},
+  "Supercopa Argentina": {country:"Argentina",continent:"South America",flag:"🇦🇷",type:"cup",teams:[]},
+  "Torneo Federal A": {country:"Argentina",continent:"South America",flag:"🇦🇷",type:"domestic",teams:[{name:"Defensores del Pronunciamiento"},{name:"Sportivo Belgrano"},{name:"Crucero del Norte"},{name:"Chaco For Ever"},{name:"Unión Santiago"},{name:"Sportivo Ameliano"}]},
+
+  // ---- USA ----
+  "MLS": {country:"USA",continent:"North America",flag:"🇺🇸",type:"domestic",teams:[{name:"LA Galaxy",logo:""},{name:"LAFC",logo:""},{name:"Seattle Sounders",logo:""},{name:"Portland Timbers",logo:""},{name:"Inter Miami",logo:""},{name:"NYCFC",logo:""},{name:"Atlanta United",logo:""},{name:"Orlando City",logo:""},{name:"Nashville SC",logo:""},{name:"Columbus Crew",logo:""},{name:"Philadelphia Union",logo:""},{name:"DC United",logo:""},{name:"New England Revolution",logo:""},{name:"Red Bulls",logo:""},{name:"Chicago Fire",logo:""},{name:"FC Dallas",logo:""},{name:"Austin FC",logo:""},{name:"Houston Dynamo",logo:""},{name:"Sporting Kansas City",logo:""},{name:"Minnesota United",logo:""}]},
+  "USL Championship": {country:"USA",continent:"North America",flag:"🇺🇸",type:"domestic",teams:[{name:"Sacramento Republic"},{name:"San Antonio FC"},{name:"New Mexico United"},{name:"Louisville City"},{name:"Tampa Bay Rowdies"},{name:"Miami FC"},{name:"Detroit City FC"},{name:"Oakland Roots"},{name:"Las Vegas Lights"},{name:"Indy Eleven"},{name:"Hartford Athletic"},{name:"Pittsburgh Riverhounds"},{name:"Birmingham Legion"},{name:"Colorado Springs Switchbacks"},{name:"El Paso Locomotive"},{name:"Charleston Battery"},{name:"Rio Grande Valley FC"},{name:"Phoenix Rising"}]},
+  "US Open Cup": {country:"USA",continent:"North America",flag:"🇺🇸",type:"cup",teams:[]},
+  "MLS Cup": {country:"USA",continent:"North America",flag:"🇺🇸",type:"cup",teams:[]},
+  "USL League One": {country:"USA",continent:"North America",flag:"🇺🇸",type:"domestic",teams:[{name:"Forward Madison FC"},{name:"Greenville Triumph"},{name:"Chattanooga Red Wolves"},{name:"South Georgia Tormenta"},{name:"North Carolina FC"},{name:"Richmond Kickers"},{name:"Union Omaha"},{name:"FC Tucson"},{name:"Spokane Velocity"}]},
+
+  // ---- MEXICO ----
+  "Liga MX": {country:"Mexico",continent:"North America",flag:"🇲🇽",type:"domestic",teams:[{name:"Club América",logo:""},{name:"Chivas Guadalajara",logo:""},{name:"Cruz Azul",logo:""},{name:"Pumas UNAM",logo:""},{name:"Tigres UANL",logo:""},{name:"Monterrey",logo:""},{name:"Atlas",logo:""},{name:"Leon",logo:""},{name:"Santos Laguna",logo:""},{name:"Toluca",logo:""},{name:"Tijuana",logo:""},{name:"Necaxa",logo:""},{name:"Puebla",logo:""},{name:"FC Juárez",logo:""},{name:"Mazatlán",logo:""},{name:"Querétaro",logo:""},{name:"San Luis",logo:""},{name:"Pachuca",logo:""}]},
+  "Liga de Expansión MX": {country:"Mexico",continent:"North America",flag:"🇲🇽",type:"domestic",teams:[{name:"Atlante"},{name:"Cancún FC"},{name:"Real Betis Mexico"},{name:"Mineros de Zacatecas"},{name:"Dorados de Sinaloa"},{name:"Tepatitlán FC"},{name:"Tapachula"},{name:"Cimarrones de Sonora"},{name:"Inter Playa del Carmen"},{name:"FC Juárez Sub 23"},{name:"Celaya"}]},
+  "Copa MX": {country:"Mexico",continent:"North America",flag:"🇲🇽",type:"cup",teams:[]},
+  "Supercopa de MX": {country:"Mexico",continent:"North America",flag:"🇲🇽",type:"cup",teams:[]},
+  "Liga Premier de México": {country:"Mexico",continent:"North America",flag:"🇲🇽",type:"domestic",teams:[{name:"Papantla FC"},{name:"Zacatepec"},{name:"Deportivo Morelia"},{name:"Puerto Vallarta"},{name:"Irapuato"},{name:"Correcaminos"}]},
+
+  // ---- JAPAN ----
+  "J1 League": {country:"Japan",continent:"Asia",flag:"🇯🇵",type:"domestic",teams:[{name:"Vissel Kobe",logo:""},{name:"Gamba Osaka",logo:""},{name:"Urawa Reds",logo:""},{name:"Kashima Antlers",logo:""},{name:"FC Tokyo",logo:""},{name:"Yokohama F. Marinos",logo:""},{name:"Kawasaki Frontale",logo:""},{name:"Nagoya Grampus",logo:""},{name:"Cerezo Osaka",logo:""},{name:"Sanfrecce Hiroshima",logo:""},{name:"Avispa Fukuoka",logo:""},{name:"Sagan Tosu",logo:""},{name:"Shonan Bellmare",logo:""},{name:"Albirex Niigata",logo:""},{name:"Kyoto Sanga",logo:""},{name:"Consadole Sapporo",logo:""},{name:"Jubilo Iwata",logo:""},{name:"Machida Zelvia",logo:""}]},
+  "J2 League": {country:"Japan",continent:"Asia",flag:"🇯🇵",type:"domestic",teams:[{name:"Vegalta Sendai"},{name:"Montedio Yamagata"},{name:"Blaublitz Akita"},{name:"Omiya Ardija"},{name:"Renofa Yamaguchi"},{name:"Giravanz Kitakyushu"},{name:"Roasso Kumamoto"},{name:"FC Ryukyu"},{name:"V-Varen Nagasaki"},{name:"Tochigi SC"},{name:"Thespakusatsu Gunma"},{name:"Ehime FC"},{name:"Kataller Toyama"},{name:"FC Gifu"}]},
+  "J3 League": {country:"Japan",continent:"Asia",flag:"🇯🇵",type:"domestic",teams:[{name:"SC Sagamihara"},{name:"AC Nagano Parceiro"},{name:"FC Imabari"},{name:"Gainare Tottori"},{name:"Azul Claro Numazu"},{name:"Nara Club"},{name:"FC Osaka"},{name:"Verspah Oita"}]},
+  "Emperor's Cup": {country:"Japan",continent:"Asia",flag:"🇯🇵",type:"cup",teams:[]},
+  "J-League Cup": {country:"Japan",continent:"Asia",flag:"🇯🇵",type:"cup",teams:[]},
+
+  // ---- SOUTH KOREA ----
+  "K League 1": {country:"South Korea",continent:"Asia",flag:"🇰🇷",type:"domestic",teams:[{name:"Jeonbuk Hyundai Motors",logo:""},{name:"Ulsan Hyundai",logo:""},{name:"Pohang Steelers",logo:""},{name:"Suwon Samsung Bluewings",logo:""},{name:"Seongnam FC",logo:""},{name:"FC Seoul",logo:""},{name:"Incheon United",logo:""},{name:"Daegu FC",logo:""},{name:"Jeju United",logo:""},{name:"Gwangju FC",logo:""},{name:"Gangwon FC",logo:""},{name:"Bucheon FC",logo:""},{name:"FC Anyang",logo:""}]},
+  "K League 2": {country:"South Korea",continent:"Asia",flag:"🇰🇷",type:"domestic",teams:[{name:"Gyeongnam FC"},{name:"Busan IPark"},{name:"Seoul E-Land FC"},{name:"Asan Mugunghwa"},{name:"Ansan Greeners"},{name:"Gimcheon Sangmu"},{name:"Daejeon Citizen"},{name:"Suwon FC"},{name:"Chungnam Asan"}]},
+  "FA Cup South Korea": {country:"South Korea",continent:"Asia",flag:"🇰🇷",type:"cup",teams:[]},
+  "K League Cup": {country:"South Korea",continent:"Asia",flag:"🇰🇷",type:"cup",teams:[]},
+  "K3 League": {country:"South Korea",continent:"Asia",flag:"🇰🇷",type:"domestic",teams:[{name:"Yangju Citizen"},{name:"Hwaseong FC"},{name:"Seongnam B"},{name:"Goyang Citizen"},{name:"Chungbuk Cheongju FC"}]},
+
+  // ---- SAUDI ARABIA ----
+  "Saudi Pro League": {country:"Saudi Arabia",continent:"Asia",flag:"🇸🇦",type:"domestic",teams:[{name:"Al-Hilal",logo:""},{name:"Al-Nassr",logo:""},{name:"Al-Ittihad",logo:""},{name:"Al-Ahli",logo:""},{name:"Al-Shabab",logo:""},{name:"Al-Qadsiah",logo:""},{name:"Al-Fayha",logo:""},{name:"Al-Fateh",logo:""},{name:"Al-Taawoun",logo:""},{name:"Al-Wehda",logo:""},{name:"Al-Akhdoud",logo:""},{name:"Al-Raed",logo:""},{name:"Al-Riyadh",logo:""},{name:"Al-Hazm",logo:""},{name:"Al-Khaleej",logo:""},{name:"Abha Club",logo:""}]},
+  "Saudi Division 1": {country:"Saudi Arabia",continent:"Asia",flag:"🇸🇦",type:"domestic",teams:[{name:"Al-Jandal"},{name:"Ohod"},{name:"Al-Kawkab"},{name:"Al-Wahda (Saudi)"},{name:"Al-Orubah"},{name:"Al-Suqoor"},{name:"Hajer"},{name:"Al-Batin"}]},
+  "King's Cup": {country:"Saudi Arabia",continent:"Asia",flag:"🇸🇦",type:"cup",teams:[]},
+  "Saudi Super Cup": {country:"Saudi Arabia",continent:"Asia",flag:"🇸🇦",type:"cup",teams:[]},
+  "Saudi Division 2": {country:"Saudi Arabia",continent:"Asia",flag:"🇸🇦",type:"domestic",teams:[{name:"Najran"},{name:"Al-Thoqbah"},{name:"Khamis Mushait"},{name:"Al-Shabab (Reserve)"},{name:"Al-Hilal B"}]},
+
+  // ---- AUSTRALIA ----
+  "A-League Men": {country:"Australia",continent:"Oceania",flag:"🇦🇺",type:"domestic",teams:[{name:"Melbourne City",logo:""},{name:"Sydney FC",logo:""},{name:"Melbourne Victory",logo:""},{name:"Perth Glory",logo:""},{name:"Brisbane Roar",logo:""},{name:"Western United",logo:""},{name:"Macarthur FC",logo:""},{name:"Western Sydney Wanderers",logo:""},{name:"Newcastle Jets",logo:""},{name:"Wellington Phoenix",logo:""},{name:"Central Coast Mariners",logo:""},{name:"Adelaide United",logo:""}]},
+  "NPL Australia": {country:"Australia",continent:"Oceania",flag:"🇦🇺",type:"domestic",teams:[{name:"APIA Leichhardt"},{name:"Rockdale City Suns"},{name:"Marconi Stallions"},{name:"Sydney Olympic"},{name:"Blacktown City"},{name:"Northern Tigers"},{name:"Wollongong Wolves"},{name:"Manly United"}]},
+  "FFA Cup": {country:"Australia",continent:"Oceania",flag:"🇦🇺",type:"cup",teams:[]},
+  "A-League Cup": {country:"Australia",continent:"Oceania",flag:"🇦🇺",type:"cup",teams:[]},
+  "W-League Australia": {country:"Australia",continent:"Oceania",flag:"🇦🇺",type:"domestic",teams:[{name:"Melbourne City W"},{name:"Sydney FC W"},{name:"Perth Glory W"},{name:"Brisbane Roar W"},{name:"Canberra United"},{name:"Newcastle Jets W"}]},
+
+  // ---- TURKEY ----
+  "Süper Lig": {country:"Turkey",continent:"Europe",flag:"🇹🇷",type:"domestic",teams:[{name:"Galatasaray",logo:""},{name:"Fenerbahçe",logo:""},{name:"Beşiktaş",logo:""},{name:"Trabzonspor",logo:""},{name:"Başakşehir",logo:""},{name:"Adana Demirspor",logo:""},{name:"Sivasspor",logo:""},{name:"Kasımpaşa",logo:""},{name:"Rizespor",logo:""},{name:"Konyaspor",logo:""},{name:"Hatayspor",logo:""},{name:"Kayserispor",logo:""},{name:"Gaziantep FK",logo:""},{name:"Alanyaspor",logo:""},{name:"Antalyaspor",logo:""}]},
+  "TFF First League": {country:"Turkey",continent:"Europe",flag:"🇹🇷",type:"domestic",teams:[{name:"Eyüpspor"},{name:"Çorum FK"},{name:"Bodrum FK"},{name:"Sakaryaspor"},{name:"Boluspor"},{name:"Göztepe"},{name:"Kocaelispor"},{name:"Pendikspor"},{name:"Giresunspor"},{name:"Erzurumspor FK"}]},
+  "TFF Second League": {country:"Turkey",continent:"Europe",flag:"🇹🇷",type:"domestic",teams:[{name:"Bucaspor"},{name:"Karabükspor"},{name:"Nazilli Belediyespor"},{name:"Tarsus İdman Yurdu"},{name:"Zonguldakspor"},{name:"Sarıyer SK"}]},
+  "Turkish Cup": {country:"Turkey",continent:"Europe",flag:"🇹🇷",type:"cup",teams:[]},
+  "Turkish Super Cup": {country:"Turkey",continent:"Europe",flag:"🇹🇷",type:"cup",teams:[]},
+
+  // ---- SCOTLAND ----
+  "Scottish Premiership": {country:"Scotland",continent:"Europe",flag:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",type:"domestic",teams:[{name:"Celtic",logo:"https://upload.wikimedia.org/wikipedia/en/3/35/Celtic_FC_crest.svg"},{name:"Rangers",logo:"https://upload.wikimedia.org/wikipedia/en/5/56/Rangers_FC_logo.svg"},{name:"Hearts",logo:""},{name:"Hibernian",logo:""},{name:"Aberdeen",logo:""},{name:"Motherwell",logo:""},{name:"St. Mirren",logo:""},{name:"Dundee",logo:""},{name:"Kilmarnock",logo:""},{name:"St. Johnstone",logo:""},{name:"Dundee United",logo:""},{name:"Ross County",logo:""}]},
+  "Scottish Championship": {country:"Scotland",continent:"Europe",flag:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",type:"domestic",teams:[{name:"Partick Thistle"},{name:"Queen's Park"},{name:"Raith Rovers"},{name:"Ayr United"},{name:"Inverness CT"},{name:"Arbroath"},{name:"Hamilton Academical"},{name:"Livingston"},{name:"Greenock Morton"},{name:"Falkirk"}]},
+  "Scottish League One": {country:"Scotland",continent:"Europe",flag:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",type:"domestic",teams:[{name:"Dunfermline Athletic"},{name:"Peterhead"},{name:"Alloa Athletic"},{name:"Airdrieonians"},{name:"Queen of the South"},{name:"Montrose"},{name:"Kelty Hearts"},{name:"Cove Rangers"},{name:"Clyde"},{name:"Stirling Albion"}]},
+  "Scottish Cup": {country:"Scotland",continent:"Europe",flag:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",type:"cup",teams:[]},
+  "Scottish League Cup": {country:"Scotland",continent:"Europe",flag:"🏴󠁧󠁢󠁳󠁣󠁴󠁿",type:"cup",teams:[]},
+
+  // Continental competitions
+  "UEFA Champions League": {country:"International",continent:"Europe",flag:"🇪🇺",type:"continental",teams:[]},
+  "UEFA Europa League": {country:"International",continent:"Europe",flag:"🇪🇺",type:"continental",teams:[]},
+  "UEFA Conference League": {country:"International",continent:"Europe",flag:"🇪🇺",type:"continental",teams:[]},
+  "CAF Champions League": {country:"International",continent:"Africa",flag:"🌍",type:"continental",teams:[]},
+  "CAF Confederation Cup": {country:"International",continent:"Africa",flag:"🌍",type:"continental",teams:[]},
+  "AFCON": {country:"International",continent:"Africa",flag:"🌍",type:"international",teams:[]},
+  "Copa Libertadores": {country:"International",continent:"South America",flag:"🌎",type:"continental",teams:[]},
+  "Copa Sudamericana": {country:"International",continent:"South America",flag:"🌎",type:"continental",teams:[]},
+  "Copa America": {country:"International",continent:"South America",flag:"🌎",type:"international",teams:[]},
+  "CONCACAF Champions Cup": {country:"International",continent:"North America",flag:"🌎",type:"continental",teams:[]},
+  "CONCACAF Gold Cup": {country:"International",continent:"North America",flag:"🌎",type:"international",teams:[]},
+  "AFC Champions League": {country:"International",continent:"Asia",flag:"🌏",type:"continental",teams:[]},
+  "FIFA World Cup": {country:"International",continent:"International",flag:"🌐",type:"international",teams:[]},
+  "FIFA Club World Cup": {country:"International",continent:"International",flag:"🌐",type:"international",teams:[]},
+  "UEFA Nations League": {country:"International",continent:"Europe",flag:"🇪🇺",type:"international",teams:[]},
+};
+
+// Build flat team index
+const TEAM_INDEX = [];
+for(const [league, data] of Object.entries(TEAMS_DB)) {
+  for(const team of data.teams) {
+    TEAM_INDEX.push({
+      name: team.name,
+      logo: team.logo || null,
+      league: league,
+      country: data.country,
+      continent: data.continent,
+      flag: data.flag,
+      leagueType: data.type
+    });
+  }
+}
+
+// =============================================
+// ADMIN STATE
+// =============================================
+let TIPS = JSON.parse(localStorage.getItem('bb_tips')) || [
+  {id:1,type:'free',match:'Arsenal vs Chelsea',homeTeam:'Arsenal',awayTeam:'Chelsea',competition:'English Premier League',country:'England',continent:'Europe',prediction:'Arsenal Win',odds:'1.85',status:'not_started',result:'pending',matchTime:'2025-01-15T15:00:00',createdAt:'2025-01-10'},
+  {id:2,type:'free',match:'Real Madrid vs Barcelona',homeTeam:'Real Madrid',awayTeam:'Barcelona',competition:'La Liga',country:'Spain',continent:'Europe',prediction:'Both Teams to Score',odds:'1.72',status:'ended',result:'won',matchTime:'2025-01-14T20:00:00',createdAt:'2025-01-09'},
+  {id:3,type:'vip',match:'Bayern Munich vs Dortmund',homeTeam:'Bayern Munich',awayTeam:'Borussia Dortmund',competition:'Bundesliga',country:'Germany',continent:'Europe',prediction:'Bayern -1.5',odds:'2.05',status:'not_started',result:'pending',matchTime:'2025-01-16T17:30:00',createdAt:'2025-01-10'},
+  {id:4,type:'free',match:'Gor Mahia vs AFC Leopards',homeTeam:'Gor Mahia',awayTeam:'AFC Leopards',competition:'FKF Premier League',country:'Kenya',continent:'Africa',prediction:'Gor Mahia Win',odds:'2.10',status:'not_started',result:'pending',matchTime:'2025-01-16T15:00:00',createdAt:'2025-01-10'},
+  {id:5,type:'vip',match:'Flamengo vs Palmeiras',homeTeam:'Flamengo',awayTeam:'Palmeiras',competition:'Copa Libertadores',country:'International',continent:'South America',prediction:'Both Teams to Score',odds:'1.75',status:'live',result:'pending',matchTime:'2025-01-15T22:00:00',createdAt:'2025-01-10'},
+];
+
+let USERS = JSON.parse(localStorage.getItem('bb_users')) || [
+  {id:1,name:'John Kamau',email:'john@gmail.com',phone:'+254712345678',subscription:{plan:'monthly',planName:'Monthly',status:'active',start:'2026-03-01',end:'2026-03-31',amount:1500,method:'mpesa'}},
+  {id:2,name:'Sarah Okonkwo',email:'sarah@gmail.com',phone:'+2348012345678',subscription:{plan:'quarterly',planName:'3 Months',status:'active',start:'2025-12-01',end:'2026-03-01',amount:3500,method:'flutterwave'}},
+  {id:3,name:'David Mwangi',email:'david@gmail.com',phone:'+254798765432',subscription:null},
+];
+
+let REVIEWS = JSON.parse(localStorage.getItem('bb_reviews')) || [
+  {id:1,name:'John Kamau',rating:5,text:'BrainBet Pro changed my betting game completely!',date:'2025-01-10',status:'approved'},
+  {id:2,name:'Sarah Okonkwo',rating:5,text:'Best betting tips platform I have ever used.',date:'2025-01-08',status:'approved'},
+  {id:3,name:'David Mwangi',rating:4,text:'Very good service. Highly recommended.',date:'2025-01-05',status:'pending'},
+];
+
+let PAYMENTS = [
+  {id:'PAY001',user:'John Kamau',plan:'Monthly',amount:1500,currency:'KES',method:'M-Pesa',date:'2026-03-01',status:'success'},
+  {id:'PAY002',user:'Sarah Okonkwo',plan:'3 Months',amount:3500,currency:'KES',method:'Flutterwave',date:'2025-12-01',status:'success'},
+  {id:'PAY003',user:'Amara Diallo',plan:'Weekly',amount:500,currency:'KES',method:'M-Pesa',date:'2026-03-20',status:'success'},
+  {id:'PAY004',user:'Carlos Silva',plan:'Monthly',amount:1500,currency:'KES',method:'Flutterwave',date:'2026-01-10',status:'success'},
+];
+
+let WIN_SLIDES = JSON.parse(localStorage.getItem('bb_slides')) || [
+  {id:1,match:'Arsenal vs Wolves',pred:'Arsenal Win',odds:'1.85',caption:'Great win! Odds @ 1.85'},
+  {id:2,match:'Real Madrid vs Sevilla',pred:'Over 2.5',odds:'1.70',caption:''},
+  {id:3,match:'Bayern vs Hoffenheim',pred:'Bayern -2',odds:'2.10',caption:'Big profit!'},
+];
+
+// Selected teams
+let homeTeamData = null;
+let awayTeamData = null;
+let selectedComp = null;
+let editingTipId = null;
+
+// =============================================
+// ADMIN LOGIN
+// =============================================
+function adminLogin() {
+  const u = document.getElementById('adminUser').value;
+  const p = document.getElementById('adminPass').value;
+  if(u === 'admin' && p === 'admin123') {
+    document.getElementById('loginScreen').style.display = 'none';
+    // Start Firebase real-time listeners
+    if(window.startAdminListeners) window.startAdminListeners();
+    initDashboard();
+    showToast('Welcome back, Admin 👋','success');
+  } else {
+    showToast('Invalid credentials','error');
+  }
+}
+document.getElementById('adminPass').addEventListener('keydown', e => { if(e.key==='Enter') adminLogin(); });
+
+// =============================================
+// PANEL NAV
+// =============================================
+function showPanel(id, el) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.getElementById('panel-'+id).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if(el) el.classList.add('active');
+  const titles = {dashboard:'DASHBOARD',tips:'ALL TIPS',addtip:'ADD NEW TIP',users:'USERS',payments:'PAYMENTS',reviews:'REVIEWS',slider:'WIN SLIDER',featured:'FEATURED GAMES',settings:'SETTINGS'};
+  document.getElementById('topbarTitle').textContent = titles[id] || id.toUpperCase();
+  if(id === 'dashboard') initDashboard();
+  if(id === 'tips') renderTipsTable();
+  if(id === 'users') renderUsersTable();
+  if(id === 'payments') renderPaymentsTable();
+  if(id === 'reviews') renderAdminReviews();
+  if(id === 'slider') renderSliderAdmin();
+  if(id === 'featured') renderFeaturedPanel();
+  if(id === 'settings') { initPricingEditor(); }
+  if(id === 'addtip') { clearTipForm(); document.getElementById('tipFormTitle').textContent = 'ADD NEW TIP'; editingTipId = null; }
+}
+
+// =============================================
+// DASHBOARD
+// =============================================
+function initDashboard() {
+  const activeSubs = USERS.filter(u => u.subscription && u.subscription.status === 'active').length;
+  const vipTips = TIPS.filter(t => t.type === 'vip').length;
+  const freeTips = TIPS.filter(t => t.type === 'free').length;
+  const revenue = PAYMENTS.reduce((s,p) => s + p.amount, 0);
+  
+  document.getElementById('statsRow').innerHTML = `
+    <div class="stat-card"><div class="stat-num">${TIPS.length}</div><div class="stat-label">Total Tips</div><div class="stat-change stat-up">↑ ${freeTips} free · ${vipTips} VIP</div></div>
+    <div class="stat-card"><div class="stat-num">${USERS.length}</div><div class="stat-label">Registered Users</div><div class="stat-change stat-up">↑ ${activeSubs} active subs</div></div>
+    <div class="stat-card"><div class="stat-num">${PAYMENTS.length}</div><div class="stat-label">Total Payments</div><div class="stat-change stat-up stat-up">↑ All successful</div></div>
+    <div class="stat-card"><div class="stat-num">$${getTotalRevenue()}</div><div class="stat-label">Total Revenue (USD)</div><div class="stat-change stat-up">↑ All payments</div></div>
+  `;
+  
+  // Recent tips table
+  const rtHead = `<thead><tr><th>Match</th><th>Type</th><th>Odds</th><th>Status</th><th>Result</th></tr></thead>`;
+  const rtBody = TIPS.slice(-5).reverse().map(t => `
+    <tr>
+      <td><strong>${t.match}</strong></td>
+      <td><span class="badge badge-${t.type}">${t.type.toUpperCase()}</span></td>
+      <td>${t.odds}</td>
+      <td><span class="badge badge-${t.status === 'live' ? 'live' : t.status === 'ended' ? 'inactive' : 'pending'}">${t.status}</span></td>
+      <td><span class="badge badge-${t.result}">${t.result}</span></td>
+    </tr>
+  `).join('');
+  document.getElementById('recentTipsTable').innerHTML = rtHead + '<tbody>' + rtBody + '</tbody>';
+  
+  // Recent payments
+  const rpHead = `<thead><tr><th>User</th><th>Plan</th><th>Amount</th><th>Method</th></tr></thead>`;
+  const rpBody = PAYMENTS.slice(-5).reverse().map(p => `
+    <tr>
+      <td>${p.user}</td>
+      <td>${p.plan}</td>
+      <td style="color:var(--gold)">KES ${p.amount.toLocaleString()}</td>
+      <td style="font-size:12px">${p.method}</td>
+    </tr>
+  `).join('');
+  document.getElementById('recentPayTable').innerHTML = rpHead + '<tbody>' + rpBody + '</tbody>';
+}
+
+// =============================================
+// AUTOCOMPLETE SEARCH
+// =============================================
+function searchTeams(side, query) {
+  const dropdown = document.getElementById(side + 'Dropdown');
+  if(!query || query.length < 2) { dropdown.classList.remove('open'); return; }
+  
+  const q = query.toLowerCase();
+  let results = TEAM_INDEX.filter(t => t.name.toLowerCase().includes(q)).slice(0,12);
+  
+  if(results.length === 0) {
+    // Show API fetch option
+    dropdown.innerHTML = `
+      <div class="ac-item" onclick="fetchTeamFromAPI('${side}','${query.replace(/'/g,"\\'")}')">
+        <div class="ac-logo-placeholder">🔍</div>
+        <div class="ac-info"><div class="ac-team-name">Search "${query}" online...</div><div class="ac-meta">Fetch from API</div></div>
+      </div>
+    `;
+    dropdown.classList.add('open');
+    return;
+  }
+  
+  dropdown.innerHTML = results.map(t => `
+    <div class="ac-item" onclick="selectTeam('${side}',${JSON.stringify(t).replace(/"/g,'&quot;').replace(/'/g,'&#39;')})">
+      ${t.logo 
+        ? `<img class="ac-logo" src="${t.logo}" alt="" onerror="this.style.display='none'">`
+        : `<div class="ac-logo-placeholder">${t.flag}</div>`
+      }
+      <div class="ac-info">
+        <div class="ac-team-name">${t.name}</div>
+        <div class="ac-meta">${t.flag} ${t.league} · ${t.country}</div>
+      </div>
+    </div>
+  `).join('');
+  dropdown.classList.add('open');
+}
+
+function selectTeam(side, teamData) {
+  if(typeof teamData === 'string') teamData = JSON.parse(teamData.replace(/&quot;/g,'"'));
+  
+  if(side === 'home') {
+    homeTeamData = teamData;
+    document.getElementById('homeTeamInput').value = teamData.name;
+    document.getElementById('homeTeamSelected').style.display = 'flex';
+    document.getElementById('homeTeamName').textContent = teamData.name;
+    document.getElementById('homeTeamMeta').textContent = teamData.flag + ' ' + teamData.league + ' · ' + teamData.country;
+    if(teamData.logo) {
+      document.getElementById('homeTeamLogo').src = teamData.logo;
+      document.getElementById('homeTeamLogo').style.display = 'block';
+      document.getElementById('homeTeamEmoji').style.display = 'none';
+    } else {
+      document.getElementById('homeTeamLogo').style.display = 'none';
+      document.getElementById('homeTeamEmoji').style.display = 'flex';
+      document.getElementById('homeTeamEmoji').textContent = teamData.flag;
+    }
+    document.getElementById('homeDropdown').classList.remove('open');
+  } else {
+    awayTeamData = teamData;
+    document.getElementById('awayTeamInput').value = teamData.name;
+    document.getElementById('awayTeamSelected').style.display = 'flex';
+    document.getElementById('awayTeamName').textContent = teamData.name;
+    document.getElementById('awayTeamMeta').textContent = teamData.flag + ' ' + teamData.league + ' · ' + teamData.country;
+    if(teamData.logo) {
+      document.getElementById('awayTeamLogo').src = teamData.logo;
+      document.getElementById('awayTeamLogo').style.display = 'block';
+      document.getElementById('awayTeamEmoji').style.display = 'none';
+    } else {
+      document.getElementById('awayTeamLogo').style.display = 'none';
+      document.getElementById('awayTeamEmoji').style.display = 'flex';
+      document.getElementById('awayTeamEmoji').textContent = teamData.flag;
+    }
+    document.getElementById('awayDropdown').classList.remove('open');
+  }
+  
+  if(homeTeamData && awayTeamData) suggestCompetitions();
+}
+
+function clearTeam(side) {
+  if(side === 'home') {
+    homeTeamData = null;
+    document.getElementById('homeTeamInput').value = '';
+    document.getElementById('homeTeamSelected').style.display = 'none';
+  } else {
+    awayTeamData = null;
+    document.getElementById('awayTeamInput').value = '';
+    document.getElementById('awayTeamSelected').style.display = 'none';
+  }
+  document.getElementById('competitionSection').style.display = 'none';
+  selectedComp = null;
+}
+
+function suggestCompetitions() {
+  const section = document.getElementById('competitionSection');
+  const optionsEl = document.getElementById('compOptions');
+  section.style.display = 'block';
+  
+  const home = homeTeamData;
+  const away = awayTeamData;
+  const comps = [];
+  
+  if(home.country === away.country && home.country !== 'International') {
+    // Same country — offer domestic leagues + domestic cups
+    const domestic = Object.entries(TEAMS_DB)
+      .filter(([k,v]) => v.country === home.country)
+      .map(([k,v]) => ({name:k, type:v.type, flag:v.flag}));
+    comps.push(...domestic);
+  } else if(home.continent === away.continent && home.country !== away.country) {
+    // Same continent, different country — continental only
+    const continental = Object.entries(TEAMS_DB)
+      .filter(([k,v]) => (v.type === 'continental' || v.type === 'international') && (v.continent === home.continent || v.continent === 'International' || v.country === 'International'))
+      .map(([k,v]) => ({name:k, type:v.type, flag:v.flag}));
+    comps.push(...continental);
+    comps.push({name:'FIFA Club World Cup', type:'international', flag:'🌐'});
+  } else {
+    // Different continents — international only
+    comps.push({name:'FIFA Club World Cup', type:'international', flag:'🌐'});
+    comps.push({name:'FIFA World Cup', type:'international', flag:'🌐'});
+    comps.push({name:'International Friendly', type:'friendly', flag:'🌐'});
+  }
+  
+  // Deduplicate
+  const seen = new Set();
+  const unique = comps.filter(c => { if(seen.has(c.name)) return false; seen.add(c.name); return true; });
+  
+  optionsEl.innerHTML = unique.slice(0,10).map(c => `
+    <div class="comp-option" onclick="pickComp(this,'${c.name.replace(/'/g,"\\'")}')">
+      ${c.flag} ${c.name}
+      <div class="comp-type">${c.type.toUpperCase()}</div>
+    </div>
+  `).join('');
+  
+  if(unique.length === 0) {
+    optionsEl.innerHTML = '<div style="color:var(--muted);font-size:13px;padding:8px 0">No suggestions — use custom field below</div>';
+  }
+}
+
+function pickComp(el, name) {
+  document.querySelectorAll('.comp-option').forEach(e => e.classList.remove('selected'));
+  el.classList.add('selected');
+  selectedComp = name;
+  document.getElementById('customComp').value = name;
+}
+
+async function fetchTeamFromAPI(side, query) {
+  showToast('Searching online for "'+query+'"...','info');
+  try {
+    const res = await fetch(`https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${encodeURIComponent(query)}`);
+    const data = await res.json();
+    const dropdown = document.getElementById(side + 'Dropdown');
+    if(!data.teams || data.teams.length === 0) {
+      dropdown.innerHTML = `<div class="ac-item"><div class="ac-logo-placeholder">❌</div><div class="ac-info"><div class="ac-team-name">No results found</div><div class="ac-meta">Try a different name</div></div></div>`;
+      return;
+    }
+    dropdown.innerHTML = data.teams.slice(0,8).map(t => {
+      const teamObj = {
+        name: t.strTeam,
+        logo: t.strTeamBadge || null,
+        league: t.strLeague || 'Unknown League',
+        country: t.strCountry || 'Unknown',
+        continent: 'International',
+        flag: '🌐',
+        leagueType: 'domestic'
+      };
+      const encoded = JSON.stringify(teamObj).replace(/"/g,'&quot;');
+      return `
+        <div class="ac-item" onclick="selectTeam('${side}',${encoded})">
+          ${t.strTeamBadge ? `<img class="ac-logo" src="${t.strTeamBadge}" alt="">` : `<div class="ac-logo-placeholder">⚽</div>`}
+          <div class="ac-info">
+            <div class="ac-team-name">${t.strTeam}</div>
+            <div class="ac-meta">🌐 ${t.strLeague || ''} · ${t.strCountry || ''}</div>
+          </div>
+        </div>
+      `;
+    }).join('');
+    dropdown.classList.add('open');
+  } catch(e) {
+    showToast('API search failed. Please enter manually.','error');
+    document.getElementById(side+'Dropdown').classList.remove('open');
+  }
+}
+
+// Close dropdowns on click outside
+document.addEventListener('click', e => {
+  if(!e.target.closest('.autocomplete-wrap')) {
+    document.querySelectorAll('.autocomplete-dropdown').forEach(d => d.classList.remove('open'));
+  }
+});
+
+// =============================================
+// TIP CRUD
+// =============================================
+async function saveTip() {
+  const home = homeTeamData ? homeTeamData.name : document.getElementById('homeTeamInput').value;
+  const away = awayTeamData ? awayTeamData.name : document.getElementById('awayTeamInput').value;
+  const comp = document.getElementById('customComp').value || selectedComp;
+  const prediction = document.getElementById('tipPrediction').value;
+  const odds = document.getElementById('tipOdds').value;
+  const matchTime = document.getElementById('matchTime').value;
+
+  if(!home || !away) return showToast('Please select both teams','error');
+  if(!comp) return showToast('Please select a competition','error');
+  if(!prediction) return showToast('Please enter a prediction','error');
+  if(!odds) return showToast('Please enter odds','error');
+  if(!matchTime) return showToast('Please set match time','error');
+
+  const tip = {
+    id: editingTipId || Date.now(),
+    homeTeam: home, awayTeam: away,
+    match: home + ' vs ' + away,
+    competition: comp,
+    country: homeTeamData?.country || 'International',
+    continent: homeTeamData?.continent || 'International',
+    prediction, odds,
+    type: document.getElementById('tipType').value,
+    status: document.getElementById('tipStatus').value,
+    result: document.getElementById('tipResult').value,
+    matchTime,
+    createdAt: new Date().toISOString(),
+    homeLogo: homeTeamData?.logo || null,
+    awayLogo: awayTeamData?.logo || null,
+  };
+
+  try {
+    if(window.AdminDB) {
+      await window.AdminDB.saveTip(tip);
+    } else {
+      throw new Error('offline');
+    }
+  } catch(e) {
+    // Fallback to localStorage
+    if(editingTipId) { const idx = TIPS.findIndex(t=>t.id===editingTipId); TIPS[idx]=tip; }
+    else TIPS.push(tip);
+    localStorage.setItem('bb_tips', JSON.stringify(TIPS));
+  }
+
+  showToast(editingTipId ? 'Tip updated ✅' : 'Tip published 🎉 — visible on site now!','success');
+  editingTipId = null;
+  clearTipForm();
+  showPanel('tips', document.querySelector('[onclick*=tips]'));
+}
+
+async function saveEditTip() {
+  const id  = document.getElementById('editId').value;
+  const idx = TIPS.findIndex(t => String(t.id) === String(id));
+  if(idx === -1) return;
+  const updated = {
+    ...TIPS[idx],
+    match: document.getElementById('editMatch').value,
+    competition: document.getElementById('editComp').value,
+    prediction: document.getElementById('editPred').value,
+    odds: document.getElementById('editOdds').value,
+    type: document.getElementById('editType').value,
+    status: document.getElementById('editStatus').value,
+    result: document.getElementById('editResult').value,
+    matchTime: document.getElementById('editTime').value,
+  };
+  try {
+    if(window.AdminDB) await window.AdminDB.saveTip(updated);
+    else throw new Error('offline');
+  } catch(e) {
+    TIPS[idx] = updated;
+    localStorage.setItem('bb_tips', JSON.stringify(TIPS));
+  }
+  closeModal('edit');
+  renderTipsTable();
+  showToast('Tip updated ✅','success');
+}
+
+async function deleteTip(id) {
+  if(!confirm('Delete this tip? This cannot be undone.')) return;
+  try {
+    if(window.AdminDB) await window.AdminDB.deleteTip(id);
+    else throw new Error('offline');
+  } catch(e) {}
+  TIPS = TIPS.filter(t => String(t.id) !== String(id));
+  localStorage.setItem('bb_tips', JSON.stringify(TIPS));
+  renderTipsTable();
+  showToast('Tip deleted','info');
+}
+
+function clearTipForm() {
+  homeTeamData = null;
+  awayTeamData = null;
+  selectedComp = null;
+  editingTipId = null;
+  document.getElementById('homeTeamInput').value = '';
+  document.getElementById('awayTeamInput').value = '';
+  document.getElementById('homeTeamSelected').style.display = 'none';
+  document.getElementById('awayTeamSelected').style.display = 'none';
+  document.getElementById('competitionSection').style.display = 'none';
+  document.getElementById('customComp').value = '';
+  document.getElementById('tipPrediction').value = '';
+  document.getElementById('tipOdds').value = '';
+  document.getElementById('matchTime').value = '';
+  document.getElementById('tipType').value = 'free';
+  document.getElementById('tipStatus').value = 'not_started';
+  document.getElementById('tipResult').value = 'pending';
+  document.getElementById('tipNotes').value = '';
+  document.getElementById('tipFormTitle').textContent = 'ADD NEW TIP';
+}
+
+function editTip(id) {
+  const t = TIPS.find(t => t.id === id);
+  if(!t) return;
+  editingTipId = id;
+  document.getElementById('editId').value = id;
+  document.getElementById('editMatch').value = t.match;
+  document.getElementById('editComp').value = t.competition;
+  document.getElementById('editPred').value = t.prediction;
+  document.getElementById('editOdds').value = t.odds;
+  document.getElementById('editType').value = t.type;
+  document.getElementById('editStatus').value = t.status;
+  document.getElementById('editResult').value = t.result;
+  document.getElementById('editTime').value = t.matchTime ? t.matchTime.slice(0,16) : '';
+  document.getElementById('modal-edit').classList.add('open');
+}
+
+function renderTipsTable(filter='all') {
+  let tips = [...TIPS];
+  if(filter !== 'all') tips = tips.filter(t => t.type === filter);
+  tips.reverse();
+  
+  const html = `
+    <thead><tr><th>Match</th><th>Competition</th><th>Prediction</th><th>Odds</th><th>Type</th><th>Status</th><th>Result</th><th>Actions</th></tr></thead>
+    <tbody>
+      ${tips.map(t => `
+        <tr>
+          <td><strong>${t.match}</strong><div style="font-size:11px;color:var(--muted)">${formatDate(t.matchTime)}</div></td>
+          <td style="font-size:12px">${t.competition}</td>
+          <td style="color:var(--gold)">${t.prediction}</td>
+          <td>${t.odds}</td>
+          <td><span class="badge badge-${t.type}">${t.type.toUpperCase()}</span></td>
+          <td><span class="badge badge-${t.status==='live'?'live':t.status==='ended'?'inactive':'pending'}">${t.status}</span></td>
+          <td><span class="badge badge-${t.result}">${t.result}</span></td>
+          <td>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-outline btn-sm" onclick="editTip(${t.id})">Edit</button>
+              <button class="btn btn-red btn-sm" onclick="deleteTip(${t.id})">Del</button>
+            </div>
+          </td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+  document.getElementById('allTipsTable').innerHTML = html;
+}
+
+function filterTipsTable(val) { renderTipsTable(val); }
+
+// =============================================
+// USERS TABLE
+// =============================================
+function renderUsersTable() {
+  document.getElementById('userCount').textContent = USERS.length + ' users registered';
+  const html = `
+    <thead><tr><th>Name</th><th>Email</th><th>Phone</th><th>Subscription</th><th>Plan</th><th>Expires</th><th>Actions</th></tr></thead>
+    <tbody>
+      ${USERS.map(u => {
+        const isActive = u.subscription && new Date(u.subscription.end) > new Date();
+        return `
+          <tr>
+            <td><strong>${u.name}</strong></td>
+            <td style="font-size:12px">${u.email}</td>
+            <td style="font-size:12px">${u.phone || '—'}</td>
+            <td><span class="badge badge-${isActive?'active':'inactive'}">${isActive?'Active':'Inactive'}</span></td>
+            <td>${u.subscription?.planName || '—'}</td>
+            <td style="font-size:12px;color:var(--muted)">${u.subscription?.end ? formatDate(u.subscription.end) : '—'}</td>
+            <td><button class="btn btn-outline btn-sm" onclick="viewUser(${u.id})">View</button></td>
+          </tr>
+        `;
+      }).join('')}
+    </tbody>
+  `;
+  document.getElementById('usersTable').innerHTML = html;
+}
+
+function viewUser(id) {
+  const u = USERS.find(u => u.id === id);
+  if(!u) return;
+  alert(`User: ${u.name}\nEmail: ${u.email}\nPlan: ${u.subscription?.planName || 'None'}\nStatus: ${u.subscription && new Date(u.subscription.end) > new Date() ? 'Active' : 'Inactive'}`);
+}
+
+// =============================================
+// PAYMENTS TABLE
+// =============================================
+function renderPaymentsTable() {
+  const total = PAYMENTS.reduce((s,p) => s+p.amount, 0);
+  const html = `
+    <thead><tr><th>ID</th><th>User</th><th>Plan</th><th>Amount</th><th>Method</th><th>Date</th><th>Status</th></tr></thead>
+    <tbody>
+      ${PAYMENTS.map(p => `
+        <tr>
+          <td style="font-size:12px;color:var(--muted)">${p.id}</td>
+          <td>${p.user}</td>
+          <td>${p.plan}</td>
+          <td style="color:var(--gold);font-weight:700">$${(p.usdAmount || (p.amount/130)).toFixed(2)} <span style="font-size:10px;color:var(--muted)">(${p.currency||'USD'})</span></td>
+          <td style="font-size:12px">${p.method}</td>
+          <td style="font-size:12px;color:var(--muted)">${formatDate(p.date)}</td>
+          <td><span class="badge badge-active">✅ ${p.status}</span></td>
+        </tr>
+      `).join('')}
+      <tr style="background:rgba(240,180,41,0.05)">
+        <td colspan="3"><strong>TOTAL REVENUE</strong></td>
+        <td style="color:var(--gold);font-weight:700;font-size:16px">$${getTotalRevenue()} USD</td>
+        <td colspan="3"></td>
+      </tr>
+    </tbody>
+  `;
+  document.getElementById('paymentsTable').innerHTML = html;
+}
+
+// =============================================
+// REVIEWS
+// =============================================
+function renderAdminReviews() {
+  const html = `
+    <thead><tr><th>User</th><th>Rating</th><th>Review</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+      ${REVIEWS.map(r => `
+        <tr>
+          <td><strong>${r.name}</strong></td>
+          <td>${'⭐'.repeat(r.rating)}</td>
+          <td style="font-size:13px;max-width:300px">${r.text}</td>
+          <td style="font-size:12px;color:var(--muted)">${formatDate(r.date)}</td>
+          <td><span class="badge badge-${r.status === 'approved' ? 'active' : 'pending'}">${r.status}</span></td>
+          <td>
+            <div style="display:flex;gap:6px">
+              ${r.status === 'pending' ? `<button class="btn btn-green btn-sm" onclick="approveReview(${r.id})">Approve</button>` : ''}
+              <button class="btn btn-red btn-sm" onclick="deleteReview(${r.id})">Delete</button>
+            </div>
+          </td>
+        </tr>
+      `).join('')}
+    </tbody>
+  `;
+  document.getElementById('reviewsTable').innerHTML = html;
+}
+async function approveReview(id) {
+  const r = REVIEWS.find(r => String(r.id) === String(id));
+  if(!r) return;
+  r.status = 'approved';
+  try {
+    if(window.AdminDB) await window.AdminDB.updateReview(id, {status:'approved'});
+    else throw new Error('offline');
+  } catch(e) { localStorage.setItem('bb_reviews', JSON.stringify(REVIEWS)); }
+  renderAdminReviews();
+  showToast('Review approved ✅ — now visible on site!','success');
+}
+async function deleteReview(id) {
+  if(!confirm('Delete this review permanently?')) return;
+  try {
+    if(window.AdminDB) await window.AdminDB.deleteReview(id);
+    else throw new Error('offline');
+  } catch(e) {}
+  REVIEWS = REVIEWS.filter(r => String(r.id) !== String(id));
+  localStorage.setItem('bb_reviews', JSON.stringify(REVIEWS));
+  renderAdminReviews();
+  showToast('Review deleted','info');
+}
+
+// =============================================
+// SLIDER
+// =============================================
+function renderSliderAdmin() {
+  const el = document.getElementById('sliderItems');
+  el.innerHTML = WIN_SLIDES.map(s => `
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:10px;padding:16px;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <div>
+        <div style="font-weight:700">${s.match}</div>
+        <div style="font-size:13px;color:var(--muted)">${s.pred} @ ${s.odds}</div>
+        ${s.caption ? `<div style="font-size:12px;color:var(--gold)">${s.caption}</div>` : ''}
+      </div>
+      <button class="btn btn-red btn-sm" onclick="deleteSlide(${s.id})">Delete</button>
+    </div>
+  `).join('') + `<div style="text-align:center;padding:20px;color:var(--muted);font-size:13px">💡 Slides auto-rotate on the main site homepage</div>`;
+}
+async function openSlideModal() {
+  const match = prompt('Match name (e.g. Arsenal vs Chelsea):');
+  if(!match) return;
+  const pred = prompt('Prediction (e.g. Arsenal Win):');
+  const odds = prompt('Odds (e.g. 1.85):');
+  const slide = {id: Date.now(), match, pred: pred||'', odds: odds||'', caption:''};
+  WIN_SLIDES.push(slide);
+  try {
+    if(window.AdminDB) await window.AdminDB.saveSlide(slide);
+    else throw new Error('offline');
+  } catch(e) { localStorage.setItem('bb_slides', JSON.stringify(WIN_SLIDES)); }
+  renderSliderAdmin();
+  showToast('Slide added!','success');
+}
+async function deleteSlide(id) {
+  WIN_SLIDES = WIN_SLIDES.filter(s => s.id !== id);
+  try {
+    if(window.AdminDB) await window.AdminDB.deleteSlide(id);
+    else throw new Error('offline');
+  } catch(e) { localStorage.setItem('bb_slides', JSON.stringify(WIN_SLIDES)); }
+  renderSliderAdmin();
+}
+
+// =============================================
+// MODAL
+// =============================================
+function closeModal(id) {
+  document.getElementById('modal-'+id).classList.remove('open');
+}
+document.querySelectorAll('.modal-overlay').forEach(m => {
+  m.addEventListener('click', e => { if(e.target === m) m.classList.remove('open'); });
+});
+
+// =============================================
+// SEARCH
+// =============================================
+function handleSearch(val) {
+  if(!val) return;
+  // Quick search through tips
+  const results = TIPS.filter(t => t.match.toLowerCase().includes(val.toLowerCase()) || t.prediction.toLowerCase().includes(val.toLowerCase()));
+  if(results.length > 0) showToast(`Found ${results.length} tip(s) matching "${val}"`, 'info');
+}
+
+// =============================================
+// HELPERS
+// =============================================
+function formatDate(dt) {
+  if(!dt) return '—';
+  return new Date(dt).toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});
+}
+// =============================================
+// USD PRICING EDITOR
+// =============================================
+function initPricingEditor() {
+  const saved = JSON.parse(localStorage.getItem('bb_plans') || 'null');
+  if(saved) {
+    document.getElementById('priceWeekly').value   = saved[0]?.usd   || 8;
+    document.getElementById('saveWeekly').value    = saved[0]?.saveUsd || 2;
+    document.getElementById('priceMonthly').value  = saved[1]?.usd   || 30;
+    document.getElementById('saveMonthly').value   = saved[1]?.saveUsd || 10;
+    document.getElementById('priceQuarterly').value= saved[2]?.usd   || 100;
+    document.getElementById('saveQuarterly').value = saved[2]?.saveUsd || 20;
+  }
+  updatePricePreview();
+  // Live preview on any input change
+  ['priceWeekly','saveWeekly','priceMonthly','saveMonthly','priceQuarterly','saveQuarterly']
+    .forEach(id => document.getElementById(id)?.addEventListener('input', updatePricePreview));
+}
+function updatePricePreview() {
+  const plans = [
+    {name:'Weekly',   usd: +document.getElementById('priceWeekly').value,   save: +document.getElementById('saveWeekly').value,   days:7},
+    {name:'Monthly',  usd: +document.getElementById('priceMonthly').value,  save: +document.getElementById('saveMonthly').value,  days:30},
+    {name:'3 Months', usd: +document.getElementById('priceQuarterly').value, save: +document.getElementById('saveQuarterly').value, days:90},
+  ];
+  const KES_RATE = 130;
+  document.getElementById('pricePreview').innerHTML = plans.map(p => `
+    <div style="background:var(--bg2);border-radius:8px;padding:10px;text-align:center">
+      <div style="font-size:11px;color:var(--muted)">${p.name}</div>
+      <div style="font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold)">$${p.usd}</div>
+      <div style="font-size:10px;color:var(--green)">Save $${p.save}</div>
+      <div style="font-size:10px;color:var(--muted);margin-top:2px">KES ${Math.round(p.usd*KES_RATE).toLocaleString()} · ${p.days}d</div>
+    </div>
+  `).join('');
+}
+async function savePricing() {
+  const plans = [
+    {id:'weekly',   usd: +document.getElementById('priceWeekly').value,   saveUsd: +document.getElementById('saveWeekly').value},
+    {id:'monthly',  usd: +document.getElementById('priceMonthly').value,  saveUsd: +document.getElementById('saveMonthly').value},
+    {id:'quarterly',usd: +document.getElementById('priceQuarterly').value, saveUsd: +document.getElementById('saveQuarterly').value},
+  ];
+  try {
+    if(window.AdminDB) await window.AdminDB.savePlans(plans);
+    else throw new Error('offline');
+  } catch(e) { localStorage.setItem('bb_plans', JSON.stringify(plans)); }
+  showToast('✅ Prices saved! All devices will update automatically.','success');
+}
+
+// =============================================
+// FEATURED GAMES
+// =============================================
+let FEATURED_GAMES = JSON.parse(localStorage.getItem('bb_featured') || '[]');
+
+function renderFeaturedPanel() {
+  const el = document.getElementById('featuredList');
+  if(!FEATURED_GAMES.length) {
+    el.innerHTML = '<div style="text-align:center;padding:40px;color:var(--muted)">No featured games yet. Click "+ Add Featured Game" to add one.</div>';
+    return;
+  }
+  el.innerHTML = FEATURED_GAMES.map((g,i) => `
+    <div style="background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;align-items:center;gap:16px;margin-bottom:10px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:12px;flex:1;min-width:200px">
+        ${g.homeLogo ? `<img src="${g.homeLogo}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:1px solid var(--border)" onerror="this.style.display='none'">` : '<div style="width:36px;height:36px;background:var(--bg2);border-radius:50%;display:flex;align-items:center;justify-content:center">⚽</div>'}
+        <strong style="font-size:14px">${g.homeTeam}</strong>
+        <span style="color:var(--gold);font-weight:700">VS</span>
+        <strong style="font-size:14px">${g.awayTeam}</strong>
+        ${g.awayLogo ? `<img src="${g.awayLogo}" style="width:36px;height:36px;border-radius:50%;object-fit:cover;border:1px solid var(--border)" onerror="this.style.display='none'">` : ''}
+      </div>
+      <div style="font-size:12px;color:var(--muted)">${g.competition} · ⏰ ${g.kickoff||'TBD'}</div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <label class="toggle" title="Show/Hide on site">
+          <input type="checkbox" ${g.active!==false?'checked':''} onchange="toggleFeatured(${i},this.checked)">
+          <span class="slider-toggle"></span>
+        </label>
+        <button class="btn btn-red btn-sm" onclick="deleteFeatured(${i})">Delete</button>
+      </div>
+    </div>
+  `).join('');
+}
+function openFeaturedModal() {
+  ['fgHomeName','fgAwayName','fgHomeLogo','fgAwayLogo','fgHomePlayer','fgAwayPlayer','fgComp','fgBgImage'].forEach(id => {
+    const el = document.getElementById(id); if(el) el.value = '';
+  });
+  document.getElementById('fgKickoff').value = '';
+  document.getElementById('fgPreview').innerHTML = '<div style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:var(--muted);font-size:13px;background:var(--bg3)">Click Preview to see how it looks →</div>';
+  document.getElementById('modal-featured').classList.add('open');
+}
+
+function previewFeatured() {
+  const home       = document.getElementById('fgHomeName').value   || 'Home Team';
+  const away       = document.getElementById('fgAwayName').value   || 'Away Team';
+  const homeLogo   = document.getElementById('fgHomeLogo').value;
+  const awayLogo   = document.getElementById('fgAwayLogo').value;
+  const homePlayer = document.getElementById('fgHomePlayer').value;
+  const awayPlayer = document.getElementById('fgAwayPlayer').value;
+  const comp       = document.getElementById('fgComp').value;
+  const kickoffRaw = document.getElementById('fgKickoff').value;
+  const bg         = document.getElementById('fgBgImage').value;
+  const kickoffStr = kickoffRaw ? new Date(kickoffRaw).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : 'TBD';
+
+  const playerStyle = 'width:48px;height:48px;border-radius:50%;object-fit:cover;object-position:top;border:2px solid rgba(255,255,255,.5);background:#1C2333;flex-shrink:0;';
+  const badgeStyle  = 'width:24px;height:24px;border-radius:50%;object-fit:contain;background:rgba(255,255,255,.08);border:1.5px solid #F0B429;flex-shrink:0;margin-left:-8px;margin-bottom:2px;';
+  const placeholderStyle = 'width:48px;height:48px;border-radius:50%;background:#1C2333;border:2px solid #F0B429;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;';
+
+  const homeImgHtml = `
+    <div style="display:flex;align-items:flex-end;justify-content:center;gap:0">
+      ${homePlayer ? `<img style="${playerStyle}" src="${homePlayer}" onerror="this.style.display='none'">` : `<div style="${placeholderStyle}">⚽</div>`}
+      ${homeLogo   ? `<img style="${badgeStyle}"  src="${homeLogo}"   onerror="this.style.display='none'">` : ''}
+    </div>`;
+
+  const awayImgHtml = `
+    <div style="display:flex;align-items:flex-end;justify-content:center;gap:0">
+      ${awayLogo   ? `<img style="${badgeStyle}"  src="${awayLogo}"   onerror="this.style.display='none'">` : ''}
+      ${awayPlayer ? `<img style="${playerStyle}" src="${awayPlayer}" onerror="this.style.display='none'">` : `<div style="${placeholderStyle}">⚽</div>`}
+    </div>`;
+
+  document.getElementById('fgPreview').innerHTML = `
+    <div style="position:absolute;inset:0;${bg?`background:url('${bg}') center/cover;filter:brightness(.28)`:'background:linear-gradient(135deg,#0d1525,#162040)'}"></div>
+    <div style="position:relative;z-index:1;display:flex;align-items:center;height:100%;max-width:540px;margin:0 auto;padding:0 44px;gap:10px;">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1">
+        ${homeImgHtml}
+        <div style="font-size:11px;font-weight:800;color:#fff;text-align:center;text-shadow:0 1px 6px rgba(0,0,0,1)">${home}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:1px;flex-shrink:0;padding:0 6px">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:26px;color:#F0B429;line-height:1">VS</div>
+        <div style="font-size:10px;color:rgba(255,255,255,.9);font-weight:700;white-space:nowrap">⏰ ${kickoffStr}</div>
+        <div style="font-size:9px;color:rgba(240,180,41,.9);white-space:nowrap;max-width:130px;overflow:hidden;text-overflow:ellipsis;text-align:center">${comp}</div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1">
+        ${awayImgHtml}
+        <div style="font-size:11px;font-weight:800;color:#fff;text-align:center;text-shadow:0 1px 6px rgba(0,0,0,1)">${away}</div>
+      </div>
+    </div>`;
+}
+
+async function saveFeaturedGame() {
+  const home = document.getElementById('fgHomeName').value.trim();
+  const away = document.getElementById('fgAwayName').value.trim();
+  if(!home || !away) return showToast('Enter both team names','error');
+  const kickoffRaw = document.getElementById('fgKickoff').value;
+  const kickoffStr = kickoffRaw ? new Date(kickoffRaw).toLocaleString('en-GB',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'}) : 'TBD';
+  const game = {
+    homeTeam: home, awayTeam: away,
+    homeLogo:   document.getElementById('fgHomeLogo').value.trim(),
+    awayLogo:   document.getElementById('fgAwayLogo').value.trim(),
+    homePlayer: document.getElementById('fgHomePlayer').value.trim(),
+    awayPlayer: document.getElementById('fgAwayPlayer').value.trim(),
+    competition:document.getElementById('fgComp').value.trim(),
+    kickoff: kickoffStr,
+    bgImage: document.getElementById('fgBgImage').value.trim(),
+    active: true
+  };
+  try {
+    if(window.AdminDB) {
+      const id = await window.AdminDB.saveFeatured(game);
+      game.id = id;
+    } else throw new Error('offline');
+  } catch(e) {
+    game.id = Date.now();
+    FEATURED_GAMES.push(game);
+    localStorage.setItem('bb_featured', JSON.stringify(FEATURED_GAMES));
+  }
+  closeModal('featured');
+  renderFeaturedPanel();
+  showToast('Featured game added! Visible on site now ✅','success');
+}
+
+async function toggleFeatured(i, val) {
+  const game = FEATURED_GAMES[i];
+  if(!game) return;
+  game.active = val;
+  try {
+    if(window.AdminDB && game.id) await window.AdminDB.updateFeatured(game.id, {active: val});
+    else throw new Error('offline');
+  } catch(e) { localStorage.setItem('bb_featured', JSON.stringify(FEATURED_GAMES)); }
+  showToast(val ? '✅ Game now visible on site' : '🙈 Game hidden from site','info');
+}
+
+async function deleteFeatured(i) {
+  if(!confirm('Remove this featured game permanently?')) return;
+  const game = FEATURED_GAMES[i];
+  try {
+    if(window.AdminDB && game?.id) await window.AdminDB.deleteFeatured(game.id);
+    else throw new Error('offline');
+  } catch(e) {}
+  FEATURED_GAMES.splice(i, 1);
+  localStorage.setItem('bb_featured', JSON.stringify(FEATURED_GAMES));
+  renderFeaturedPanel();
+  showToast('Removed','info');
+}
+
+// =============================================
+// FIX: Revenue display in USD
+// =============================================
+function getTotalRevenue() {
+  return PAYMENTS.reduce((s,p) => s + (p.usdAmount || p.amount/130 || 0), 0).toFixed(2);
+}
+
+function showToast(msg, type='info') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = `toast show ${type}`;
+  setTimeout(() => t.className = 'toast', 3500);
+}
+</script>
+</body>
+</html>
